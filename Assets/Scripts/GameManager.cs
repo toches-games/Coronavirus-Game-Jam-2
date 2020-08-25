@@ -8,18 +8,23 @@ using UnityEngine;
 public enum GameState
 {
     menu,
-    inGame,
+    lvl1,
+    lvl2,
+    lvl3,
+    lvl4,
+    lvl5,
+    lvl6,
     gameOver
 }
 
 public class GameManager : MonoBehaviour
 {
 
-    public GameState currentGameState = GameState.menu;
+    public GameState currentGameState = GameState.lvl1;
     public static GameManager sharedInstance;
     public int collectedObject = 0;
     PlayerController controller;
-    public float gameSpeed = 3.5f;
+    public float gameSpeed = 7f;
     AudioSource backgroundAudioSource;
 
     private void Awake()
@@ -30,21 +35,21 @@ public class GameManager : MonoBehaviour
         }
         controller = GameObject.Find("Player").
             GetComponent<PlayerController>();
-        backgroundAudioSource = GameObject.Find("Background Music").GetComponent<AudioSource>();
+        //backgroundAudioSource = GameObject.Find("Background Music").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Submit") && currentGameState != GameState.inGame)
-        {
-            StartGame();
-        }
+        //if (Input.GetButtonDown("Submit") && currentGameState != GameState.inGame)
+        //{
+        //    StartGame();
+        //}
     }
 
     public void StartGame()
     {
-        setGameState(GameState.inGame);
+        //setGameState(GameState.inGame);
         collectedObject = 0;
 
         if(!backgroundAudioSource.isPlaying)
@@ -73,7 +78,7 @@ public class GameManager : MonoBehaviour
             //MenuManager.sharedInstance.HideGameOverMenu();
 
         }
-        else if (newGameState == GameState.inGame)
+        else if (newGameState == GameState.lvl1)
         {
             //LevelManager.sharedInstance.RemoveAllLevelBlocks();
             //LevelManager.sharedInstance.GenerateInitialBlocks();

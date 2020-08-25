@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float jumpForce = 7f;
+    public float jumpForce = 3f;
     public AudioSource fallDown;
+    [SerializeField]
     float runningSpeed;
-    Rigidbody2D playerRb;
-    Animator animator;
+    Rigidbody playerRb;
+    //Animator animator;
     Vector3 startPosition;
     const string IS_ALIVE = "isAlive";
     const string IS_ON_THE_GROUND = "isOnTheGround";
@@ -24,7 +25,7 @@ public class PlayerController : MonoBehaviour
     public const int SUPERJUMP_COST = 10;
     public const float SUPERJUMP_FORCE = 2f;
 
-    public float jumpRaycastDistance = 1.5f;
+    public float jumpRaycastDistance = 0.6f;
 
     //Variables para el conseguir el swipe up y saltar
     Vector2 startTouchPosition, endTouchPosition;
@@ -32,13 +33,13 @@ public class PlayerController : MonoBehaviour
     bool jumpNormal = false;
 
     //variable publica donde meteremos la referencia a la capa o layer 
-    //con la que vamos a refernciar los rayos o raycast
+    //con la que vamos a referenciar los rayos o raycast
     public LayerMask groundMask; 
 
     private void Awake()
     {
-        playerRb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
+        playerRb = GetComponent<Rigidbody>();
+        //animator = GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
@@ -51,41 +52,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetButtonDown("Jump"))
-        //{
-        //    Jump(false);
-
-        //}
-        //if (Input.GetButtonDown("SuperJump"))
-        //{
-        //    Jump(true);
-        //}
-
-        SwipeCheck();
-        if (jumpNormal)
+        if (Input.GetButtonDown("Jump"))
         {
-            Jump(false);
-
+            Jump();
         }
-        if (jumpSuper)
-        {
-            Jump(true);
-        }
+        
+        
 
-        //Movimiento con las teclas izq o der
-        //playerRb.velocity = new Vector2(Input.GetAxis("Horizontal") * runningSpeed, playerRb.velocity.y);
-
-        //if (Input.GetAxis("Horizontal") > 0)
-        //{
-        //    GetComponent<SpriteRenderer>().flipX = false;
-        //}else if(Input.GetAxis("Horizontal") < 0)
-        //{
-        //    GetComponent<SpriteRenderer>().flipX = true;
-        //}
-
-        animator.SetBool(IS_ON_THE_GROUND, isTouchingTheGround());
-        animator.SetFloat(VERTICAL_FORCE, playerRb.velocity.y);
-        animator.SetFloat(HORIZONTAL_FORCE, playerRb.velocity.x * 0.23f);
+        //animator.SetBool(IS_ON_THE_GROUND, isTouchingTheGround());
+        //animator.SetFloat(VERTICAL_FORCE, playerRb.velocity.y);
+        //animator.SetFloat(HORIZONTAL_FORCE, playerRb.velocity.x * 0.23f);
         
         //Debug.Log( (int)GetTraveledDistance() % 10);
 
@@ -94,9 +70,14 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-
-        if (GameManager.sharedInstance.currentGameState == GameState.inGame)
+        
+        if (GameManager.sharedInstance.currentGameState == GameState.lvl1)
         {
+            playerRb.velocity = new Vector3(Input.GetAxis("Horizontal") * runningSpeed,
+                                            playerRb.velocity.y, 0);
+            
+
+            /**
             if (playerRb.velocity.x < runningSpeed)
             {
                 playerRb.velocity = new Vector2(runningSpeed,
@@ -108,35 +89,25 @@ public class PlayerController : MonoBehaviour
             {
                 runningSpeed += 0.03f;
             }
+            **/
         }
         else //si no estamos dentro de la partida
         {
-            playerRb.velocity = new Vector2(0, playerRb.velocity.y);
-            runningSpeed = GameManager.sharedInstance.gameSpeed;
+            //playerRb.velocity = new Vector3(0, playerRb.velocity.y, 0);
+            //runningSpeed = GameManager.sharedInstance.gameSpeed;
         }
-
-        
     }
 
-    public void Jump(bool superJump)
+    public void Jump()
     {
-        float jumpForceFactor = jumpForce;
-
-        if (isTouchingTheGround() && GameManager.sharedInstance.currentGameState == GameState.inGame)
+        if (isTouchingTheGround() && GameManager.sharedInstance.currentGameState != GameState.menu
+            && GameManager.sharedInstance.currentGameState != GameState.gameOver)
         {
-            if (superJump && manaPoints >= SUPERJUMP_COST)
-            {
-                manaPoints -= SUPERJUMP_COST;
-                jumpForceFactor *= SUPERJUMP_FORCE;
-                
-            }
             //ForceMode2D me dos opcionesm force que seria como una 
             //fuerza constante e impulse que seria como aplicar una
             //fuerza en instante nada mas.
-            playerRb.AddForce(Vector2.up * jumpForceFactor, ForceMode2D.Impulse);
-            GetComponent<AudioSource>().Play();
-            jumpSuper = false;
-            jumpNormal = false;
+            playerRb.AddForce(Vector2.up * jumpForce, ForceMode.Impulse);
+            //GetComponent<AudioSource>().Play();
         }
     }
 
@@ -165,11 +136,9 @@ public class PlayerController : MonoBehaviour
 
     bool isTouchingTheGround()
     {
-        //Probamos varias distancias (0.2f) para que funciones bien
-        if (Physics2D.Raycast(this.transform.position, 
-                                Vector2.down, jumpRaycastDistance, groundMask)) 
+        if (Physics.Raycast(this.transform.position, 
+            Vector3.down, jumpRaycastDistance, groundMask)) 
         {
-            //Solo fue una prueba GameManager.sharedInstance.currentGameState = GameState.inGame;
             return true;
         }
         else
@@ -189,14 +158,14 @@ public class PlayerController : MonoBehaviour
             PlayerPrefs.SetFloat("maxScore", travelledDistance);
         }
 
-        animator.SetBool(IS_ALIVE, false);
+        //animator.SetBool(IS_ALIVE, false);
         GameManager.sharedInstance.GameOver();
     }
 
     public void StartGame()
     {
-        animator.SetBool(IS_ALIVE, true);
-        animator.SetBool(IS_ON_THE_GROUND, true);
+        //animator.SetBool(IS_ALIVE, true);
+        //animator.SetBool(IS_ON_THE_GROUND, true);
         //Me permite invocar el metodo un tiempo despues
         Invoke("RestartPosition", 0.2f);
         healthPoints = INITIAL_HEALTH;
@@ -231,7 +200,7 @@ public class PlayerController : MonoBehaviour
         }
         if (points <= 0)
         {
-            animator.SetTrigger("damageEnemy");
+            //animator.SetTrigger("damageEnemy");
         }
     }
 
