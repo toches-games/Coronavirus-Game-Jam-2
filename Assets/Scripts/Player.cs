@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    bool forward, right, left;
+    //Guarda la pared actual
+    RaycastHit currentWall;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,13 +16,15 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        RaycastHit hit;
+        //Guarda la siguiente pared a la que va a moverse
+        RaycastHit nextWall;
 
         //Si el raycast hacia adelande del jugador detecta una pared
-        if(Physics.Raycast(transform.position, transform.forward, out hit)){
+        if(Physics.Raycast(transform.position, transform.forward, out hit) && currentWall.collider != nextWall.collider){
             //Hace que la posición del jugador sea igual al de esa pared detectada
             //manteniendo su posición en y por si salta en plena transición
-            transform.position = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+            transform.position = new Vector3(nextWall.point.x, transform.position.y, nextWall.point.z);
+            currentWall = nextWall;
         }
     }
 }
