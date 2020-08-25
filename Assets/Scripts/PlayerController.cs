@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public float gravity = 10f;
     public float jumpForce = 3f;
     public AudioSource fallDown;
     [SerializeField]
@@ -73,8 +74,21 @@ public class PlayerController : MonoBehaviour
         
         if (GameManager.sharedInstance.currentGameState == GameState.lvl1)
         {
+            //Se mueve el personaje
             playerRb.velocity = new Vector3(Input.GetAxis("Horizontal") * runningSpeed,
                                             playerRb.velocity.y, 0);
+
+            //Si está en el aire
+            if(!isTouchingTheGround()){
+                //Se le aplica una fuerza hacia abajo para que caiga
+                playerRb.AddForce(Vector3.up * -gravity, ForceMode.Acceleration);
+            }
+
+            else{
+                //Si está en el suelo se pone la velocidad en y a 0 para que
+                //no se ralentice por el peso de la gravedad que traia al caer
+                playerRb.velocity = new Vector3(playerRb.velocity.x, 0f, 0f);
+            }
             
 
             /**
