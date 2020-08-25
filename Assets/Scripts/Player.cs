@@ -20,11 +20,14 @@ public class Player : MonoBehaviour
         RaycastHit nextWall;
 
         //Si el raycast hacia adelande del jugador detecta una pared
-        if(Physics.Raycast(transform.position, transform.forward, out hit) && currentWall.collider != nextWall.collider){
+        if(Physics.Raycast(transform.position, transform.forward, out nextWall) && currentWall.collider != nextWall.collider){
             //Hace que la posición del jugador sea igual al de esa pared detectada
             //manteniendo su posición en y por si salta en plena transición
-            transform.position = new Vector3(nextWall.point.x, transform.position.y, nextWall.point.z);
-            currentWall = nextWall;
+            //solo si collisiona con una pared (el collider no es nulo)
+            if(nextWall.collider){
+                transform.position = new Vector3(nextWall.point.x, transform.position.y, nextWall.point.z);
+                currentWall = nextWall;
+            }
         }
     }
 }
