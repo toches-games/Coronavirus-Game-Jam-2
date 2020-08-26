@@ -284,7 +284,7 @@ public class PlayerController : MonoBehaviour
             GameManager.sharedInstance.NextLevel(2);
             sprite.SetActive(false);
             shader.SetActive(true);
-            //playerRb.rotation = Quaternion.Euler(0, 90, 0);
+            
 
         }
         if (other.CompareTag("finishAnimation"))
@@ -292,9 +292,18 @@ public class PlayerController : MonoBehaviour
             //playerRb.MoveRotation(Quaternion.Euler(0, 90, 0));
             //transform.rotation = Quaternion.Euler(0, 90, 0);
             //transform.Rotate(0, 90, 0);
-            playerRb.rotation = Quaternion.Euler(0, 90, 0);
+            //playerRb.rotation = Quaternion.Euler(0, 90, 0);
+            //playerRb.rotation = Quaternion.Euler(0, 90, 0);
             sprite.SetActive(true);
             shader.SetActive(false);
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("finishAnimation"))
+        {
+            playableDirector.Stop();
+            other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
         }
     }
 
