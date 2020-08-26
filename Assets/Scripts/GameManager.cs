@@ -1,6 +1,7 @@
 ﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 //Aqui realizamos todo el manejo de los estados del juego, cambio
 //de escenas cuando pierde, menu principal y modo jugando.
@@ -26,6 +27,8 @@ public class GameManager : MonoBehaviour
     PlayerController controller;
     public float gameSpeed = 7f;
     AudioSource backgroundAudioSource;
+
+    public List<CinemachineVirtualCamera> cameras;
 
     private void Awake()
     {
@@ -61,16 +64,22 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        setGameState(GameState.gameOver);
+        SetGameState(GameState.gameOver);
     }
 
     public void BackToMenu()
     {
-        setGameState(GameState.menu);
+        SetGameState(GameState.menu);
     }
 
-    void setGameState(GameState newGameState)
+    public void NextLevel(int lvl)
     {
+        SetGameState((GameState)lvl);
+    }
+
+    void SetGameState(GameState newGameState)
+    {
+
         if (newGameState == GameState.menu)
         {
             //MenuManager.sharedInstance.ShowMainMenu();
@@ -80,13 +89,21 @@ public class GameManager : MonoBehaviour
         }
         else if (newGameState == GameState.lvl1)
         {
-            //LevelManager.sharedInstance.RemoveAllLevelBlocks();
-            //LevelManager.sharedInstance.GenerateInitialBlocks();
-            controller.StartGame();
-            //MenuManager.sharedInstance.HideMainMenu();
-            //MenuManager.sharedInstance.ShowGameScore();
-            //MenuManager.sharedInstance.HideGameOverMenu();
-            
+
+        }
+        else if (newGameState == GameState.lvl2)
+        {
+            //Destroy(cameras[0]);
+            //cameras[0] = null;
+            //cameras.RemoveAt(0);
+            cameras[1].gameObject.SetActive(true);
+            cameras[1].Priority++;
+        }
+        else if (newGameState == GameState.lvl3)
+        {
+        }
+        else if (newGameState == GameState.lvl4)
+        {
         }
         else if (newGameState == GameState.gameOver)
         {

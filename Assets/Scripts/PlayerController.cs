@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class PlayerController : MonoBehaviour
 {
@@ -35,7 +36,12 @@ public class PlayerController : MonoBehaviour
 
     //variable publica donde meteremos la referencia a la capa o layer 
     //con la que vamos a referenciar los rayos o raycast
-    public LayerMask groundMask; 
+    public LayerMask groundMask;
+
+    public PlayableDirector playableDirector;
+    GameState currentState;
+    public GameObject sprite;
+    public GameObject shader;
 
     private void Awake()
     {
@@ -48,6 +54,11 @@ public class PlayerController : MonoBehaviour
     {
         startPosition = this.transform.position;
         runningSpeed = GameManager.sharedInstance.gameSpeed;
+        //GameObject.Find("CM vcam3").GetComponent<CinemachineVirtualCamera>().Priority++;
+        //playerRb.MoveRotation(Quaternion.Euler(0, 90, 0));
+        //transform.rotation = Quaternion.Euler(0, 90, 0);
+        //transform.Rotate(0, 90, 0);
+        //playerRb.rotation = Quaternion.Euler(0, 90, 0);
     }
 
     // Update is called once per frame
@@ -71,15 +82,38 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        
-        if (GameManager.sharedInstance.currentGameState == GameState.lvl1)
-        {
-            //Se mueve el personaje
-            playerRb.velocity = new Vector3(Input.GetAxis("Horizontal") * runningSpeed,
-                                            playerRb.velocity.y, 0);
+        currentState = GameManager.sharedInstance.currentGameState;
 
+        if (currentState != GameState.menu && currentState != GameState.gameOver)
+        {
+            switch (currentState)
+            {
+                case GameState.lvl1:
+                    playerRb.velocity = new Vector3(Input.GetAxis("Horizontal") * runningSpeed,
+                                                    playerRb.velocity.y, 0);
+                    break;
+                case GameState.lvl2:
+                    playerRb.velocity = new Vector3(0, playerRb.velocity.y, 
+                                                    Input.GetAxis("Horizontal") * -runningSpeed);
+                    break;
+                case GameState.lvl3:
+                    playerRb.velocity = new Vector3(Input.GetAxis("Horizontal") * -runningSpeed,
+                                                    playerRb.velocity.y, 0);
+                    break;
+                case GameState.lvl4:
+                    playerRb.velocity = new Vector3(0, playerRb.velocity.y,
+                                                    Input.GetAxis("Horizontal") * runningSpeed);
+                    break;
+                case GameState.lvl5:
+                    playerRb.velocity = new Vector3(Input.GetAxis("Horizontal") * runningSpeed,
+                                playerRb.velocity.y, 0);
+                    break;
+                case GameState.lvl6:
+                    break;
+            }
+            
             //Si está en el aire
-            if(!isTouchingTheGround()){
+            if (!isTouchingTheGround()){
                 //Se le aplica una fuerza hacia abajo para que caiga
                 playerRb.AddForce(Vector3.up * -gravity, ForceMode.Acceleration);
             }
@@ -87,7 +121,7 @@ public class PlayerController : MonoBehaviour
             else{
                 //Si está en el suelo se pone la velocidad en y a 0 para que
                 //no se ralentice por el peso de la gravedad que traia al caer
-                playerRb.velocity = new Vector3(playerRb.velocity.x, 0f, 0f);
+                playerRb.velocity = new Vector3(playerRb.velocity.x, 0f, playerRb.velocity.z);
             }
             
 
@@ -114,8 +148,7 @@ public class PlayerController : MonoBehaviour
 
     public void Jump()
     {
-        if (isTouchingTheGround() && GameManager.sharedInstance.currentGameState != GameState.menu
-            && GameManager.sharedInstance.currentGameState != GameState.gameOver)
+        if (isTouchingTheGround() && currentState != GameState.menu && currentState != GameState.gameOver)
         {
             //ForceMode2D me dos opcionesm force que seria como una 
             //fuerza constante e impulse que seria como aplicar una
@@ -242,6 +275,27 @@ public class PlayerController : MonoBehaviour
         return this.transform.position.x - startPosition.x;
     }
 
-    
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("initAnimation"))
+        {
+            playableDirector.Play();
+            GameManager.sharedInstance.NextLevel(2);
+            sprite.SetActive(false);
+            shader.SetActive(true);
+            //playerRb.rotation = Quaternion.Euler(0, 90, 0);
+
+        }
+        if (other.CompareTag("finishAnimation"))
+        {
+            //playerRb.MoveRotation(Quaternion.Euler(0, 90, 0));
+            //transform.rotation = Quaternion.Euler(0, 90, 0);
+            //transform.Rotate(0, 90, 0);
+            playerRb.rotation = Quaternion.Euler(0, 90, 0);
+            sprite.SetActive(true);
+            shader.SetActive(false);
+        }
+    }
 
 }
