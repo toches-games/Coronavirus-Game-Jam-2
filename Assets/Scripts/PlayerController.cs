@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
         }
 
         //Si está en el aire
-        if (!isTouchingTheGround()){
+        if (!IsTouchingTheGround()){
             //Se le aplica una fuerza hacia abajo para que caiga
             playerRb.AddForce(Vector3.up * -gravity, ForceMode.Acceleration);
         }
@@ -171,12 +171,12 @@ public class PlayerController : MonoBehaviour
         animator.SetBool(WALKING_STATE, walking);
         animator.SetFloat(LAST_HORIZONTAL, lastMovement);
         animator.SetFloat(VERTICAL, playerRb.velocity.y);
-        animator.SetBool(IS_TOUCHING_GROUND, isTouchingTheGround());
+        animator.SetBool(IS_TOUCHING_GROUND, IsTouchingTheGround());
     }
 
     public void Jump()
     {
-        if (isTouchingTheGround() && currentState != GameState.menu && currentState != GameState.gameOver)
+        if (IsTouchingTheGround() && currentState != GameState.menu && currentState != GameState.gameOver)
         {
             //ForceMode2D me dos opcionesm force que seria como una 
             //fuerza constante e impulse que seria como aplicar una
@@ -209,7 +209,7 @@ public class PlayerController : MonoBehaviour
         //Debug.Log(endTouchPosition.y);
     }
 
-    bool isTouchingTheGround()
+    bool IsTouchingTheGround()
     {
         if (Physics.Raycast(this.transform.position, 
             Vector3.down, jumpRaycastDistance, groundMask)) 
@@ -312,7 +312,7 @@ public class PlayerController : MonoBehaviour
             GameManager.sharedInstance.NextLevel(2);
             sprite.enabled = false;
             shader.SetActive(true);
-            
+            playerRb.freezeRotation = false;
 
         }
         if (other.CompareTag("finishAnimation"))
@@ -324,6 +324,8 @@ public class PlayerController : MonoBehaviour
             //playerRb.rotation = Quaternion.Euler(0, 90, 0);
             sprite.enabled = true;
             shader.SetActive(false);
+            playerRb.freezeRotation = true;
+
         }
     }
     private void OnTriggerExit(Collider other)
