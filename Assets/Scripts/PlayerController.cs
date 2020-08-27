@@ -46,12 +46,12 @@ public class PlayerController : MonoBehaviour
     //con la que vamos a referenciar los rayos o raycast
     public LayerMask groundMask;
 
-    public PlayableDirector playableDirector;
     GameState currentState;
     SpriteRenderer sprite;
     public GameObject shader;
     float lastMovement = 1f;
     bool walking = false;
+    int currentLevel;
 
     private void Awake()
     {
@@ -75,15 +75,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Jump"))
-        {
-            Jump();
-        }
-
-
         
-
-        Debug.DrawRay(this.transform.position, Vector3.down * jumpRaycastDistance, Color.red);
     }
 
     void FixedUpdate()
@@ -94,6 +86,12 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        if (Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
+
+        Debug.DrawRay(this.transform.position, Vector3.down * jumpRaycastDistance, Color.red);
         walking = false;
         
         if (Input.GetAxis(HORIZONTAL) >= 0.2 || Input.GetAxis(HORIZONTAL) <= -0.2)
@@ -172,6 +170,7 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat(LAST_HORIZONTAL, lastMovement);
         animator.SetFloat(VERTICAL, playerRb.velocity.y);
         animator.SetBool(IS_TOUCHING_GROUND, IsTouchingTheGround());
+        Debug.Log(GameManager.sharedInstance.currentGameState);
     }
 
     public void Jump()
@@ -308,12 +307,12 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("initAnimation"))
         {
-            playableDirector.Play();
-            GameManager.sharedInstance.NextLevel(2);
+            //playableDirector.Play();
+            GameManager.sharedInstance.NextLevel(((int)GameManager.sharedInstance.currentGameState) + 1);
             sprite.enabled = false;
             shader.SetActive(true);
             playerRb.freezeRotation = false;
-
+            other.GetComponent<BoxCollider>().enabled = false;
         }
         if (other.CompareTag("finishAnimation"))
         {
@@ -325,15 +324,15 @@ public class PlayerController : MonoBehaviour
             sprite.enabled = true;
             shader.SetActive(false);
             playerRb.freezeRotation = true;
-
         }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("finishAnimation"))
         {
-            playableDirector.Stop();
+            //playableDirector.Stop();
             other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+
         }
     }
 

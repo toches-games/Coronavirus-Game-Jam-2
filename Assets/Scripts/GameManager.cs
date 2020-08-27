@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.Playables;
 
 //Aqui realizamos todo el manejo de los estados del juego, cambio
 //de escenas cuando pierde, menu principal y modo jugando.
@@ -29,6 +30,8 @@ public class GameManager : MonoBehaviour
     AudioSource backgroundAudioSource;
 
     public List<CinemachineVirtualCamera> cameras;
+    public List<PlayableDirector> playableDirector;
+
 
     private void Awake()
     {
@@ -96,8 +99,7 @@ public class GameManager : MonoBehaviour
             //Destroy(cameras[0]);
             //cameras[0] = null;
             //cameras.RemoveAt(0);
-            cameras[1].gameObject.SetActive(true);
-            cameras[1].Priority++;
+            
         }
         else if (newGameState == GameState.lvl3)
         {
@@ -110,7 +112,14 @@ public class GameManager : MonoBehaviour
             //MenuManager.sharedInstance.Invoke("ShowGameOverMenu",1.8f);
             //MenuManager.sharedInstance.Invoke("HideGameScore",1.8f);
         }
-
+        if((int)newGameState > 1)
+        {
+            Debug.Log((int)newGameState);
+            cameras[(int)newGameState - 1].gameObject.SetActive(true);
+            cameras[(int)newGameState - 1].Priority += (int)newGameState;
+            playableDirector[(int)newGameState - 2].Play();
+        }
+        
         this.currentGameState = newGameState;
     }
     /**
