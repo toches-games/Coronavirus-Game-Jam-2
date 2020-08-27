@@ -26,13 +26,22 @@ public class EnemyManager : MonoBehaviour
 
     [Header("Decals")]
 
-    //Prefab del agujero que se colocará en la pared
+    //Prefabs del agujero que se colocarán en la pared
     public GameObject[] decals;
+
+    //Prefab de las grietas que se crearán para el taladro
+    public GameObject[] crack;
 
     [Header("Others")]
 
     //Referencia a painter
     public GameObject painter;
+
+    //Referencia al martillo que se moverá para atacar en esa posición
+    public Transform hammerPosition;
+
+    //Referencia al taladro que se moverá para atacar en esa posición
+    public Rigidbody drillPosition;
 
     //Referencia al player
     Transform player;
@@ -40,68 +49,104 @@ public class EnemyManager : MonoBehaviour
     //Estado actual del juego
     GameState currentState;
 
-    //Referencia al objeto que se moverá para atacar en esa posición
-    Transform instantiatePosition;
-
     void Awake(){
         player = GameObject.Find("Player").transform;
-        instantiatePosition = transform.GetChild(0);
     }
 
-    // Start is called before the first frame update
-    IEnumerator Start()
+    void Start(){
+        currentState = GameManager.sharedInstance.currentGameState;
+
+        //StartCoroutine(HammerMovement());
+        StartCoroutine(DrillMovement());
+    }
+
+    IEnumerator HammerMovement()
     {
-            //Comprueba el estado del juego para saber que enemigo será el que ataca
-            //dependiendo del nivel
         while(true){
-            //Se guarda el estado actual del juego
-            currentState = GameManager.sharedInstance.currentGameState;
+            Vector3 targetPosition = hammerPosition.position;
 
-            //Mientras que el juego esté en el menú y en el nivel 1 o el jugador muere
-            //no hace nada y vuelve a comprobar el estado 2 segundos despues
-            while(currentState == GameState.menu || currentState == GameState.gameOver /*|| currentState == GameState.lvl1*/){
-                yield return new WaitForSeconds(2f);
-                currentState = GameManager.sharedInstance.currentGameState;
-            }
+            yield return new WaitForSeconds(hammerDelayAttack);
 
-            //Mientras se hace la animación no hará nada por 4 segundos
-            if(painter.activeSelf){
-                yield return new WaitForSeconds(4f);
-            }
+            Transform temp = Instantiate(decals[Random.Range(3, decals.Length)], targetPosition, hammerPosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
+            temp.SetParent(transform);
 
-            if(currentState == GameState.lvl1){
-
-                yield return StartCoroutine(HammerAttack());
-            }
-
-            /*if(currentState == GameState.lvl3){
-                yield return StartCoroutine(DrillAttack());
-            }*/
+            yield return new WaitForSeconds(hammerSpeedAttack);
         }
     }
 
-    IEnumerator HammerAttack(){
-        Vector3 targetPosition = instantiatePosition.position;
+    IEnumerator DrillMovement(){
+        /*bool attack = false;
 
-        yield return new WaitForSeconds(hammerDelayAttack);
+        drillPosition.position = player.position + drillPosition.transform.right * -2f;
 
-        //Se crea el agujero en la pared
-        Transform temp = Instantiate(decals[Random.Range(3, decals.Length)], targetPosition, instantiatePosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
-        temp.SetParent(transform);
+        while(true){
+            if(Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(drillPosition.position.x, drillPosition.position.z)) < 1f){
+                float distance = Mathf.Abs(drillPosition.position.y - player.position.y);
+                int crackCount = 0;
+                
+                drillPosition.position = new Vector3(drillPosition.position.x,
+                                                Mathf.MoveTowards(drillPosition.position.y, player.position.y, 10f * distance * Time.deltaTime),
+                                                drillPosition.position.z);
 
-        yield return new WaitForSeconds(hammerSpeedAttack);
-    }
+                Transform temp = Instantiate(crack[crackCount++], drillPosition.transform.GetChild(0).position, drillPosition.rotation * Quaternion.Euler(0, 180, 0)).transform;
+                temp.SetParent(transform);
 
-    IEnumerator DrillAttack(){
-        Vector3 targetPosition = instantiatePosition.position;
+                if(crackCount >= crack.Length){
+                    crackCount = 0;
+                }
+                    
+                distance = Mathf.Abs(drillPosition.position.y - player.position.y);
 
-        yield return new WaitForSeconds(drillDelayAttack);
+                yield return null;
+            }
 
-        //Se crea el agujero en la pared
-        Transform temp = Instantiate(decals[Random.Range(0, 3)], targetPosition, instantiatePosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
-        temp.SetParent(transform);
+            else{
+                if(!attack){
+                    float distance = Mathf.Abs(drillPosition.position.y - player.position.y);
+                    drillPosition.position = new Vector3(drillPosition.position.x,
+                                                        Mathf.MoveTowards(drillPosition.position.y, player.position.y, 2f * distance * Time.deltaTime),
+                                                        drillPosition.position.z);
+                        
+                    float random = Random.Range(1, 101);
 
-        yield return new WaitForSeconds(drillSpeedAttack);
+                    if(random <= 1){
+                        attack = true;
+                        yield return new WaitForSeconds(1f);
+                    }
+                }
+
+                if(attack){
+                    float value = 0;
+                    int crackCount = 0;
+                    float distanceToPlayer = Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(drillPosition.position.x, drillPosition.position.z));
+
+                    while(value < 180/2 && distanceToPlayer > 1f){
+                        distanceToPlayer = Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(drillPosition.position.x, drillPosition.position.z));
+                        drillPosition.transform.GetChild(0).localPosition = drillPosition.transform.right * Mathf.Sin(value * Mathf.Deg2Rad * 2) * 10f;
+                        value++;
+
+                        if(value <= 180/2/2){
+                            Transform temp = Instantiate(crack[crackCount++], drillPosition.transform.GetChild(0).position, drillPosition.rotation * Quaternion.Euler(0, 180, 0)).transform;
+                            temp.SetParent(transform);
+
+                            if(crackCount >= crack.Length){
+                                crackCount = 0;
+                            }
+                        }
+                        yield return null;
+                    }
+                    attack = false;
+                }
+            }
+            yield return null;
+        }*/
+
+        while(true){
+            yield return new WaitForSeconds(drillDelayAttack);
+
+            Transform temp = Instantiate(decals[0], drillPosition.position, hammerPosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
+            temp.SetParent(transform);
+        }
     }
 
     //Hacemos que el collider donde se crearán los ataques al rededor del jugador
@@ -109,7 +154,27 @@ public class EnemyManager : MonoBehaviour
     //para que pueda estar siempre donde el jugador, y colocar los agujeros en dirección
     //a la pared (que es la misma rotación que tendrá el jugador)
     void FixedUpdate(){
-        instantiatePosition.position = player.position;
-        instantiatePosition.rotation = player.rotation;
+        if(currentState == GameState.lvl1){    
+            hammerPosition.position = player.position;
+            hammerPosition.rotation = player.rotation;
+        }
+
+        if(currentState == GameState.lvl1){
+            /*float distance = Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(drillPosition.position.x, drillPosition.position.z));
+            
+            if(distance > 1f){
+                drillPosition.MovePosition(drillPosition.position + drillPosition.transform.right * 3f * Time.deltaTime);
+            }
+
+            else{
+                drillPosition.transform.GetChild(0).position = Vector3.MoveTowards(drillPosition.transform.GetChild(0).position, player.position, 5f * distance * Time.deltaTime);
+            }
+
+            drillPosition.rotation = player.rotation;*/
+
+            float distance = Vector3.Distance(drillPosition.position, player.position);
+            drillPosition.MovePosition(Vector3.MoveTowards(drillPosition.position, player.position, distance * 5f * Time.deltaTime));
+            drillPosition.rotation = player.rotation;
+        }
     }
 }
