@@ -32,6 +32,10 @@ public class GameManager : MonoBehaviour
     public List<CinemachineVirtualCamera> cameras;
     public List<PlayableDirector> playableDirector;
 
+    //Guarda las coroutinas de las herramientas para detenerlas en cada cambio de nivel
+    Coroutine hammerCoroutine;
+    Coroutine drillCoroutine;
+    //------------------------------------------
 
     private void Awake()
     {
@@ -71,11 +75,21 @@ public class GameManager : MonoBehaviour
 
     public void NextLevel(int lvl)
     {
+        if(hammerCoroutine != null){
+            StopCoroutine(hammerCoroutine);
+        }
+
+        if(drillCoroutine != null){
+            StopCoroutine(drillCoroutine);
+        }
+
         SetGameState((GameState)lvl);
     }
 
     void SetGameState(GameState newGameState)
     {
+        //Actualiza el nivel en el EnemyManager
+        EnemyManager.sharedInstance.currentState = newGameState;
 
         if (newGameState == GameState.menu)
         {
@@ -90,6 +104,9 @@ public class GameManager : MonoBehaviour
         }
         else if (newGameState == GameState.lvl2)
         {
+            //Inicia y guarda la coroutina del martillo
+            hammerCoroutine = StartCoroutine(EnemyManager.sharedInstance.HammerMovement());
+
             //Destroy(cameras[0]);
             //cameras[0] = null;
             //cameras.RemoveAt(0);
@@ -99,12 +116,19 @@ public class GameManager : MonoBehaviour
         }
         else if (newGameState == GameState.lvl3)
         {
+            //Inicia y guarda la coroutina del taladro
+            drillCoroutine = StartCoroutine(EnemyManager.sharedInstance.DrillMovement());
+
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ
                                                                 | RigidbodyConstraints.FreezeRotation;
         }
         else if (newGameState == GameState.lvl4)
         {
+            //Inicia y guarda la coroutina del martillo y taladro
+            hammerCoroutine = StartCoroutine(EnemyManager.sharedInstance.HammerMovement());
+            drillCoroutine = StartCoroutine(EnemyManager.sharedInstance.DrillMovement());
+
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX
                                                                 | RigidbodyConstraints.FreezeRotation;
