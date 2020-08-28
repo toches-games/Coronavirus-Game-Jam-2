@@ -48,6 +48,9 @@ public class EnemyManager : MonoBehaviour
     //Estado actual del juego
     GameState currentState;
 
+    bool drillAttack = false;
+    bool close = false;
+
     void Awake(){
         player = GameObject.Find("Player").transform;
     }
@@ -91,9 +94,19 @@ public class EnemyManager : MonoBehaviour
 
         while(true){
             Vector3 targetPosition = drillPosition.position;
+            float playerDistance = Vector2.Distance(new Vector2(targetPosition.x, targetPosition.z), new Vector2(player.position.x, player.position.z));
 
-            if(Random.Range(1, 101) < 2){
-                yield return StartCoroutine(AnimateDrill(targetPosition));
+            if(playerDistance >= 3f){
+                if(Random.Range(1, 101) < 2){
+                    close = false;
+                    drillAttack = true;
+                    yield return StartCoroutine(AnimateDrill(targetPosition));
+                }
+            }
+
+            else{
+                close = true;
+                yield return StartCoroutine(AnimateDrill(targetPosition)); 
             }
 
             yield return null;
@@ -106,13 +119,12 @@ public class EnemyManager : MonoBehaviour
         int crackCount = 0;
 
         do{
-            float distance = Vector3.Distance(animate.position, targetPosition - Vector3.up * 2f);
             animate.localPosition = new Vector3(Mathf.Sin(angle * Mathf.Deg2Rad * drillDelayAttack) * 10f, -0.95f, -0.64f);
             angle++;
 
             if(angle <= 90/drillDelayAttack){
                 //animate.localRotation = Quaternion.Euler(new Vector3(-90, 0, Random.Range(0f, 10f)));
-                Vector3 particlePosition = new Vector3(animate.position.x + 2.1f, drillPosition.position.y, drillPosition.position.z);
+                Vector3 particlePosition = new Vector3(animate.position.x + 2.1f, targetPosition.y, drillPosition.position.z);
                 Transform temp = Instantiate(crack[crackCount++], particlePosition, drillPosition.rotation * Quaternion.Euler(0, 180, 0)).transform;
                 temp.SetParent(transform);
             }
@@ -123,6 +135,8 @@ public class EnemyManager : MonoBehaviour
 
             yield return null;
         }while(angle <= 180/drillDelayAttack);
+
+        drillAttack = false;
     }
 
     //Hacemos que el collider donde se crearán los ataques al rededor del jugador
@@ -135,9 +149,19 @@ public class EnemyManager : MonoBehaviour
             hammerPosition.rotation = player.rotation;
         }
 
-        if(currentState == GameState.lvl1){    
-            drillPosition.MovePosition(drillPosition.position + drillPosition.transform.right * drillSpeed * Time.deltaTime);
-            drillPosition.rotation = player.rotation;
+        if(currentState == GameState.lvl1){
+            if(!drillAttack){
+                float yDistance = Mathf.Abs(drillPosition.position.y - player.position.y);
+
+                drillPosition.position = new Vector3(drillPosition.position.x,
+                    Mathf.MoveTowards(drillPosition.position.y, player.position.y, yDistance * drillSpeed * 2 * Time.deltaTime),
+                    drillPosition.position.z);
+            }
+
+            if(!close){
+                drillPosition.MovePosition(drillPosition.position + drillPosition.transform.right * drillSpeed * Time.deltaTime);
+                drillPosition.rotation = player.rotation;
+            }
         }
     }
 }
