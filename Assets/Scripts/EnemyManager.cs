@@ -6,13 +6,12 @@ public class EnemyManager : MonoBehaviour
 {
     [Header("Hammer Settings")]
 
-    //Velocidad con la que el martillo golpeará
-    [Range(0, 5)]
-    public float hammerSpeedAttack = 5f;
-
     //Tiempo que tardará en realizar el ataque el martillo
-    [Range(0, 5)]
+    [Range(1, 20)]
     public float hammerDelayAttack = 1f;
+
+    [Range(1, 20)]
+    public float hammerSpeed = 1f;
 
     [Header("Drill Settings")]
 
@@ -41,7 +40,7 @@ public class EnemyManager : MonoBehaviour
     public Transform hammerPosition;
 
     //Referencia al taladro que se moverá para atacar en esa posición
-    public Rigidbody drillPosition;
+    public Transform drillPosition;
 
     //Referencia al player
     Transform player;
@@ -56,8 +55,8 @@ public class EnemyManager : MonoBehaviour
     void Start(){
         currentState = GameManager.sharedInstance.currentGameState;
 
-        //StartCoroutine(HammerMovement());
-        StartCoroutine(DrillMovement());
+        StartCoroutine(HammerMovement());
+        //StartCoroutine(DrillMovement());
     }
 
     IEnumerator HammerMovement()
@@ -65,17 +64,30 @@ public class EnemyManager : MonoBehaviour
         while(true){
             Vector3 targetPosition = hammerPosition.position;
 
-            yield return new WaitForSeconds(hammerDelayAttack);
+            yield return StartCoroutine(AnimateHammer(targetPosition));
 
             Transform temp = Instantiate(decals[Random.Range(3, decals.Length)], targetPosition, hammerPosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
             temp.SetParent(transform);
 
-            yield return new WaitForSeconds(hammerSpeedAttack);
+            yield return null;
         }
     }
 
-    IEnumerator DrillMovement(){
-        /*bool attack = false;
+    IEnumerator AnimateHammer(Vector3 targetPosition){
+        float angle = 0f;
+        Transform animate = hammerPosition.GetChild(0);
+
+        do{
+            float distance = Vector3.Distance(animate.position, targetPosition - Vector3.up * 2f);
+            animate.localRotation = Quaternion.Euler(new Vector3(0, -90f, Mathf.Sin(angle * Mathf.Deg2Rad * hammerDelayAttack) * 50f));
+            animate.position = Vector3.MoveTowards(animate.position, targetPosition - Vector3.up * 2f, distance * hammerSpeed * Time.deltaTime);
+            angle++;
+            yield return null;
+        }while(angle <= 180/hammerDelayAttack);
+    }
+
+    /*IEnumerator DrillMovement(){
+        bool attack = false;
 
         drillPosition.position = player.position + drillPosition.transform.right * -2f;
 
@@ -122,7 +134,10 @@ public class EnemyManager : MonoBehaviour
 
                     while(value < 180/2 && distanceToPlayer > 1f){
                         distanceToPlayer = Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(drillPosition.position.x, drillPosition.position.z));
-                        drillPosition.transform.GetChild(0).localPosition = drillPosition.transform.right * Mathf.Sin(value * Mathf.Deg2Rad * 2) * 10f;
+                        drillPosition.transform.GetChild(0).localPosition = drillPosition.transform.right * Mathf.Sin(value * Mathf.Deg2Rad * 2) * 10f + 
+                        new Vector3(-1.396f,
+                            Mathf.Sin(Time.time * 25f) * 0.1f - 0.908f,
+                            Mathf.Sin(Time.time * 20f) * 0.1f - 1.328f);
                         value++;
 
                         if(value <= 180/2/2){
@@ -139,7 +154,7 @@ public class EnemyManager : MonoBehaviour
                 }
             }
             yield return null;
-        }*/
+        }
 
         while(true){
             yield return new WaitForSeconds(drillDelayAttack);
@@ -147,7 +162,7 @@ public class EnemyManager : MonoBehaviour
             Transform temp = Instantiate(decals[0], drillPosition.position, hammerPosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
             temp.SetParent(transform);
         }
-    }
+    }*/
 
     //Hacemos que el collider donde se crearán los ataques al rededor del jugador
     //tenga la misma posición y rotación que el jugador
@@ -159,8 +174,8 @@ public class EnemyManager : MonoBehaviour
             hammerPosition.rotation = player.rotation;
         }
 
-        if(currentState == GameState.lvl1){
-            /*float distance = Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(drillPosition.position.x, drillPosition.position.z));
+        /*if(currentState == GameState.lvl1){
+            float distance = Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(drillPosition.position.x, drillPosition.position.z));
             
             if(distance > 1f){
                 drillPosition.MovePosition(drillPosition.position + drillPosition.transform.right * 3f * Time.deltaTime);
@@ -170,11 +185,17 @@ public class EnemyManager : MonoBehaviour
                 drillPosition.transform.GetChild(0).position = Vector3.MoveTowards(drillPosition.transform.GetChild(0).position, player.position, 5f * distance * Time.deltaTime);
             }
 
-            drillPosition.rotation = player.rotation;*/
+            drillPosition.rotation = player.rotation;
 
             float distance = Vector3.Distance(drillPosition.position, player.position);
             drillPosition.MovePosition(Vector3.MoveTowards(drillPosition.position, player.position, distance * 5f * Time.deltaTime));
             drillPosition.rotation = player.rotation;
-        }
+
+            drillPosition.transform.GetChild(0).localPosition = new Vector3(
+                Mathf.Sin(Time.time * 20f) * 0.1f - 1.396f,
+                Mathf.Sin(Time.time * 25f) * 0.1f - 0.908f,
+                Mathf.Sin(Time.time * 20f) * 0.1f - 1.328f
+            );
+        }*/
     }
 }
