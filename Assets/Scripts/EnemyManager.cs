@@ -17,11 +17,11 @@ public class EnemyManager : MonoBehaviour
 
     //Velocidad con la que el taladro golpeará
     [Range(0, 5)]
-    public float drillSpeedAttack = 1f;
+    public float drillDelayAttack = 1f;
 
     //Tiempo que tardará en realizar el ataque el taladro
     [Range(0, 5)]
-    public float drillDelayAttack = 1f;
+    public float drillSpeed = 1f;
 
     [Header("Decals")]
 
@@ -40,7 +40,7 @@ public class EnemyManager : MonoBehaviour
     public Transform hammerPosition;
 
     //Referencia al taladro que se moverá para atacar en esa posición
-    public Transform drillPosition;
+    public Rigidbody drillPosition;
 
     //Referencia al player
     Transform player;
@@ -55,8 +55,8 @@ public class EnemyManager : MonoBehaviour
     void Start(){
         currentState = GameManager.sharedInstance.currentGameState;
 
-        StartCoroutine(HammerMovement());
-        //StartCoroutine(DrillMovement());
+        //StartCoroutine(HammerMovement());
+        StartCoroutine(DrillMovement());
     }
 
     IEnumerator HammerMovement()
@@ -86,116 +86,58 @@ public class EnemyManager : MonoBehaviour
         }while(angle <= 180/hammerDelayAttack);
     }
 
-    /*IEnumerator DrillMovement(){
-        bool attack = false;
-
-        drillPosition.position = player.position + drillPosition.transform.right * -2f;
+    IEnumerator DrillMovement(){
+        drillPosition.position = player.position + player.right * -4f;
 
         while(true){
-            if(Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(drillPosition.position.x, drillPosition.position.z)) < 1f){
-                float distance = Mathf.Abs(drillPosition.position.y - player.position.y);
-                int crackCount = 0;
-                
-                drillPosition.position = new Vector3(drillPosition.position.x,
-                                                Mathf.MoveTowards(drillPosition.position.y, player.position.y, 10f * distance * Time.deltaTime),
-                                                drillPosition.position.z);
+            Vector3 targetPosition = drillPosition.position;
 
-                Transform temp = Instantiate(crack[crackCount++], drillPosition.transform.GetChild(0).position, drillPosition.rotation * Quaternion.Euler(0, 180, 0)).transform;
-                temp.SetParent(transform);
-
-                if(crackCount >= crack.Length){
-                    crackCount = 0;
-                }
-                    
-                distance = Mathf.Abs(drillPosition.position.y - player.position.y);
-
-                yield return null;
+            if(Random.Range(1, 101) < 2){
+                yield return StartCoroutine(AnimateDrill(targetPosition));
             }
 
-            else{
-                if(!attack){
-                    float distance = Mathf.Abs(drillPosition.position.y - player.position.y);
-                    drillPosition.position = new Vector3(drillPosition.position.x,
-                                                        Mathf.MoveTowards(drillPosition.position.y, player.position.y, 2f * distance * Time.deltaTime),
-                                                        drillPosition.position.z);
-                        
-                    float random = Random.Range(1, 101);
-
-                    if(random <= 1){
-                        attack = true;
-                        yield return new WaitForSeconds(1f);
-                    }
-                }
-
-                if(attack){
-                    float value = 0;
-                    int crackCount = 0;
-                    float distanceToPlayer = Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(drillPosition.position.x, drillPosition.position.z));
-
-                    while(value < 180/2 && distanceToPlayer > 1f){
-                        distanceToPlayer = Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(drillPosition.position.x, drillPosition.position.z));
-                        drillPosition.transform.GetChild(0).localPosition = drillPosition.transform.right * Mathf.Sin(value * Mathf.Deg2Rad * 2) * 10f + 
-                        new Vector3(-1.396f,
-                            Mathf.Sin(Time.time * 25f) * 0.1f - 0.908f,
-                            Mathf.Sin(Time.time * 20f) * 0.1f - 1.328f);
-                        value++;
-
-                        if(value <= 180/2/2){
-                            Transform temp = Instantiate(crack[crackCount++], drillPosition.transform.GetChild(0).position, drillPosition.rotation * Quaternion.Euler(0, 180, 0)).transform;
-                            temp.SetParent(transform);
-
-                            if(crackCount >= crack.Length){
-                                crackCount = 0;
-                            }
-                        }
-                        yield return null;
-                    }
-                    attack = false;
-                }
-            }
             yield return null;
         }
+    }
 
-        while(true){
-            yield return new WaitForSeconds(drillDelayAttack);
+    IEnumerator AnimateDrill(Vector3 targetPosition){
+        float angle = 0f;
+        Transform animate = drillPosition.transform.GetChild(0);
+        int crackCount = 0;
 
-            Transform temp = Instantiate(decals[0], drillPosition.position, hammerPosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
-            temp.SetParent(transform);
-        }
-    }*/
+        do{
+            float distance = Vector3.Distance(animate.position, targetPosition - Vector3.up * 2f);
+            animate.localPosition = new Vector3(Mathf.Sin(angle * Mathf.Deg2Rad * drillDelayAttack) * 10f, -0.95f, -0.64f);
+            angle++;
+
+            if(angle <= 90/drillDelayAttack){
+                //animate.localRotation = Quaternion.Euler(new Vector3(-90, 0, Random.Range(0f, 10f)));
+                Vector3 particlePosition = new Vector3(animate.position.x + 2.1f, drillPosition.position.y, drillPosition.position.z);
+                Transform temp = Instantiate(crack[crackCount++], particlePosition, drillPosition.rotation * Quaternion.Euler(0, 180, 0)).transform;
+                temp.SetParent(transform);
+            }
+
+            if(crackCount >= crack.Length){
+                crackCount = 0;
+            }
+
+            yield return null;
+        }while(angle <= 180/drillDelayAttack);
+    }
 
     //Hacemos que el collider donde se crearán los ataques al rededor del jugador
     //tenga la misma posición y rotación que el jugador
     //para que pueda estar siempre donde el jugador, y colocar los agujeros en dirección
     //a la pared (que es la misma rotación que tendrá el jugador)
     void FixedUpdate(){
-        if(currentState == GameState.lvl1){    
+        if(currentState == GameState.lvl2){    
             hammerPosition.position = player.position;
             hammerPosition.rotation = player.rotation;
         }
 
-        /*if(currentState == GameState.lvl1){
-            float distance = Vector2.Distance(new Vector2(player.position.x, player.position.z), new Vector2(drillPosition.position.x, drillPosition.position.z));
-            
-            if(distance > 1f){
-                drillPosition.MovePosition(drillPosition.position + drillPosition.transform.right * 3f * Time.deltaTime);
-            }
-
-            else{
-                drillPosition.transform.GetChild(0).position = Vector3.MoveTowards(drillPosition.transform.GetChild(0).position, player.position, 5f * distance * Time.deltaTime);
-            }
-
+        if(currentState == GameState.lvl1){    
+            drillPosition.MovePosition(drillPosition.position + drillPosition.transform.right * drillSpeed * Time.deltaTime);
             drillPosition.rotation = player.rotation;
-
-            float distance = Vector3.Distance(drillPosition.position, player.position);
-            drillPosition.MovePosition(Vector3.MoveTowards(drillPosition.position, player.position, distance * 5f * Time.deltaTime));
-            drillPosition.rotation = player.rotation;
-
-            drillPosition.transform.GetChild(0).localPosition = new Vector3(
-                Mathf.Sin(Time.time * 20f) * 0.1f - 1.396f,
-                Mathf.Sin(Time.time * 25f) * 0.1f - 0.908f,
-                Mathf.Sin(Time.time * 20f) * 0.1f - 1.328f
-            );
-        }*/
+        }
     }
 }
