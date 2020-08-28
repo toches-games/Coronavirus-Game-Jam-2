@@ -44,24 +44,15 @@ public class GameManager : MonoBehaviour
         //backgroundAudioSource = GameObject.Find("Background Music").GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //if (Input.GetButtonDown("Submit") && currentGameState != GameState.inGame)
-        //{
-        //    StartGame();
-        //}
-    }
-
     public void StartGame()
     {
-        //setGameState(GameState.inGame);
-        collectedObject = 0;
-
+        /**
         if(!backgroundAudioSource.isPlaying)
         {
             backgroundAudioSource.Play();
         }
+        **/
+        NextLevel(1);
 
     }
 
@@ -69,7 +60,10 @@ public class GameManager : MonoBehaviour
     {
         SetGameState(GameState.gameOver);
     }
-
+    public void Exit()
+    {
+        Application.Quit();
+    }
     public void BackToMenu()
     {
         SetGameState(GameState.menu);
@@ -85,27 +79,35 @@ public class GameManager : MonoBehaviour
 
         if (newGameState == GameState.menu)
         {
-            //MenuManager.sharedInstance.ShowMainMenu();
-            //MenuManager.sharedInstance.HideGameScore();
-            //MenuManager.sharedInstance.HideGameOverMenu();
 
         }
         else if (newGameState == GameState.lvl1)
         {
-
+            cameras[(int)newGameState - 1].gameObject.SetActive(true);
+            cameras[(int)newGameState - 1].Priority += (int)newGameState;
+            controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ
+                                                                | RigidbodyConstraints.FreezeRotation;
         }
         else if (newGameState == GameState.lvl2)
         {
             //Destroy(cameras[0]);
             //cameras[0] = null;
             //cameras.RemoveAt(0);
-            
+            controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX
+                                                                | RigidbodyConstraints.FreezeRotation;
         }
         else if (newGameState == GameState.lvl3)
         {
+            controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ
+                                                                | RigidbodyConstraints.FreezeRotation;
         }
         else if (newGameState == GameState.lvl4)
         {
+            controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX
+                                                                | RigidbodyConstraints.FreezeRotation;
         }
         else if (newGameState == GameState.gameOver)
         {
@@ -114,19 +116,12 @@ public class GameManager : MonoBehaviour
         }
         if((int)newGameState > 1)
         {
-            Debug.Log((int)newGameState);
             cameras[(int)newGameState - 1].gameObject.SetActive(true);
             cameras[(int)newGameState - 1].Priority += (int)newGameState;
             playableDirector[(int)newGameState - 2].Play();
+            cameras[(int)newGameState].gameObject.SetActive(false);
         }
-        
         this.currentGameState = newGameState;
     }
-    /**
-    public void CollectedObject(Collectables collectable)
-    {
-        collectedObject += collectable.value;
-    }
-    **/
 
 }

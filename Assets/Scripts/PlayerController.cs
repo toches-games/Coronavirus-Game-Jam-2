@@ -332,6 +332,7 @@ public class PlayerController : MonoBehaviour
         {
             //playableDirector.Stop();
             other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
+            Destroy(GameObject.Find("Platforms" + ((int)GameManager.sharedInstance.currentGameState - 1)));
 
         }
     }
