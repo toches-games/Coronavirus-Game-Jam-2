@@ -54,6 +54,13 @@ public class EnemyManager : MonoBehaviour
 
     public static EnemyManager sharedInstance;
 
+    //----- Audio -----
+    public AudioClip[] hammerClips;
+    public AudioClip[] drillClips;
+
+    AudioSource hammerSource;
+    AudioSource drillSource;
+
     void Awake()
     {
         if (sharedInstance == null){
@@ -62,7 +69,11 @@ public class EnemyManager : MonoBehaviour
 
         else{
             Destroy(this);
+            return;
         }
+
+        hammerSource = GetComponents<AudioSource>()[0];
+        drillSource = GetComponents<AudioSource>()[1];
     }
 
     public IEnumerator HammerMovement()
@@ -72,7 +83,9 @@ public class EnemyManager : MonoBehaviour
                 Vector3 targetPosition = hammerPosition.position;
 
                 yield return StartCoroutine(AnimateHammer(targetPosition));
-
+                
+                hammerSource.clip = hammerClips[Random.Range(0, hammerClips.Length)];
+                hammerSource.Play();
                 Transform temp = Instantiate(decals[Random.Range(3, decals.Length)], targetPosition, hammerPosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
                 temp.SetParent(transform);
 
@@ -108,12 +121,16 @@ public class EnemyManager : MonoBehaviour
                     if(Random.Range(1, 101) < 2){
                         close = false;
                         drillAttack = true;
+                        drillSource.clip = drillClips[Random.Range(0, drillClips.Length)];
+                        drillSource.Play();
                         yield return StartCoroutine(AnimateDrill(targetPosition));
                     }
                 }
 
                 else{
                     close = true;
+                    drillSource.clip = drillClips[Random.Range(0, drillClips.Length)];
+                    drillSource.Play();
                     yield return StartCoroutine(AnimateDrill(targetPosition)); 
                 }
 
