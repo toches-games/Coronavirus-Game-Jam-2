@@ -197,7 +197,7 @@ public class EnemyManager : MonoBehaviour
             Debug.DrawRay(drillPosition.position, drillPosition.transform.forward, Color.green);
 
             RaycastHit hit;
-            if(Physics.Raycast(drillPosition.transform.GetChild(0).position + drillPosition.transform.forward * -2f, drillPosition.transform.forward, out hit)){
+            if(Physics.Raycast(drillPosition.transform.GetChild(0).position + drillPosition.transform.forward * -2f + drillPosition.transform.up * 0.95f, drillPosition.transform.forward, out hit)){
                 drillAttackPosition = hit.point;
             }
         }
