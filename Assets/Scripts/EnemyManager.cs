@@ -80,13 +80,26 @@ public class EnemyManager : MonoBehaviour
 
     public IEnumerator HammerMovement()
     {
-        yield return new WaitForSeconds(5f);
-        hammerPosition.position = player.position + player.right * -4f;
+        int hammerCount = 0;
+        //yield return new WaitForSeconds(5f);
+        //hammerPosition.position = player.position + player.right * -4f;
 
-        start = true;
+        //start = true;
 
         while(true){
             Vector3 targetPosition = hammerPosition.position;
+
+            if(!start){
+                if(hammerCount < 3){
+                    targetPosition = player.position + Vector3.up * 2f;
+                    hammerCount++;
+                }
+
+                else{
+                    start = true;
+                    yield return new WaitForSeconds(3f);
+                }
+            }
 
                 yield return StartCoroutine(AnimateHammer(targetPosition));
 
@@ -113,13 +126,33 @@ public class EnemyManager : MonoBehaviour
     }
 
     public IEnumerator DrillMovement(){
-        yield return new WaitForSeconds(5f);
-        drillPosition.position = player.position + player.right * -4f;
-        start = true;
+        int drillCount = 0;
+        //yield return new WaitForSeconds(5f);
+
+        //drillPosition.position = player.position + player.right * -4f;
 
         while(true){
             Vector3 targetPosition = drillPosition.position;
             float playerDistance = Vector2.Distance(new Vector2(targetPosition.x, targetPosition.z), new Vector2(player.position.x, player.position.z));
+
+            if(!start){
+                if(drillCount < 2){
+                    drillPosition.position = player.position + player.right * -4f;
+                    drillPosition.rotation = player.rotation;
+                    playerDistance = 0;
+                    drillCount++;
+                    yield return new WaitForSeconds(1f);
+                }
+
+                else{
+                    start = true;
+                    yield return new WaitForSeconds(1f);
+                    drillPosition.position = player.position + player.right * -4f;
+                    drillPosition.rotation = player.rotation;
+                }
+            }
+
+
 
                 if(playerDistance >= 3f){
                     if(Random.Range(1, 101) < 2){
@@ -175,12 +208,12 @@ public class EnemyManager : MonoBehaviour
     //para que pueda estar siempre donde el jugador, y colocar los agujeros en dirección
     //a la pared (que es la misma rotación que tendrá el jugador)
     void FixedUpdate(){
-        if((currentState == GameState.lvl2 || currentState == GameState.lvl4) && start){
+        if((currentState == GameState.lvl2 || currentState == GameState.lvl4)){
             hammerPosition.position = player.position;
             hammerPosition.rotation = player.rotation;
         }
 
-        if((currentState == GameState.lvl3 || currentState == GameState.lvl4) && start){
+        if((currentState == GameState.lvl3 || currentState == GameState.lvl4)){
             if(!drillAttack){
                 float yDistance = Mathf.Abs(drillPosition.position.y - player.position.y);
 
