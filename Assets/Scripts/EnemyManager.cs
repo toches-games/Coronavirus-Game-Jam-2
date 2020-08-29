@@ -54,6 +54,13 @@ public class EnemyManager : MonoBehaviour
     [HideInInspector]
     public bool start;
 
+    //----- Audio -----
+    public AudioClip[] hammerClips;
+    public AudioClip[] drillClips;
+
+    AudioSource hammerSource;
+    AudioSource drillSource;
+
     void Awake()
     {
         if (sharedInstance == null){
@@ -62,23 +69,29 @@ public class EnemyManager : MonoBehaviour
 
         else{
             Destroy(this);
+            return;
         }
+
+        hammerSource = GetComponents<AudioSource>()[0];
+        drillSource = GetComponents<AudioSource>()[1];
     }
 
     public IEnumerator HammerMovement()
     {
         yield return new WaitForSeconds(5f);
-        start = true;
-        
         hammerPosition.position = player.position + player.right * -4f;
+
+        start = true;
 
         while(true){
             Vector3 targetPosition = hammerPosition.position;
 
-            yield return StartCoroutine(AnimateHammer(targetPosition));
+                yield return StartCoroutine(AnimateHammer(targetPosition));
 
-            Transform temp = Instantiate(decals[Random.Range(3, decals.Length)], targetPosition, hammerPosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
-            temp.SetParent(transform);
+                hammerSource.clip = hammerClips[Random.Range(0, hammerClips.Length)];
+                hammerSource.Play();
+                Transform temp = Instantiate(decals[Random.Range(3, decals.Length)], targetPosition, hammerPosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
+                temp.SetParent(transform);
 
             yield return null;
         }
@@ -99,26 +112,29 @@ public class EnemyManager : MonoBehaviour
 
     public IEnumerator DrillMovement(){
         yield return new WaitForSeconds(5f);
-        start = true;
-
         drillPosition.position = player.position + player.right * -4f;
+        start = true;
 
         while(true){
             Vector3 targetPosition = drillPosition.position;
             float playerDistance = Vector2.Distance(new Vector2(targetPosition.x, targetPosition.z), new Vector2(player.position.x, player.position.z));
 
-            if(playerDistance >= 3f){
-                if(Random.Range(1, 101) < 2){
-                    close = false;
-                    drillAttack = true;
-                    yield return StartCoroutine(AnimateDrill(targetPosition));
+                if(playerDistance >= 3f){
+                    if(Random.Range(1, 101) < 2){
+                        close = false;
+                        drillAttack = true;
+                        drillSource.clip = drillClips[Random.Range(0, drillClips.Length)];
+                        drillSource.Play();
+                        yield return StartCoroutine(AnimateDrill(targetPosition));
+                    }
                 }
-            }
 
-            else{
-                close = true;
-                yield return StartCoroutine(AnimateDrill(targetPosition)); 
-            }
+                else{
+                    close = true;
+                    drillSource.clip = drillClips[Random.Range(0, drillClips.Length)];
+                    drillSource.Play();
+                    yield return StartCoroutine(AnimateDrill(targetPosition)); 
+                }
 
             yield return null;
         }
