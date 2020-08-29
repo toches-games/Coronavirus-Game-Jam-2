@@ -8,6 +8,7 @@ TagManager:
   - finishAnimation
   - InitPainter
   - FinishPainter
+  - KillZone
   layers:
   - Default
   - TransparentFX

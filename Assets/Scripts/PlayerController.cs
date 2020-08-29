@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviour
     public float positionSidesRaycast = 0.3f;
     Vector3 positionLeft;
     Vector3 positionRight;
+    public List<Image>lives;
 
     //Variables para el conseguir el swipe up y saltar
     Vector2 startTouchPosition, endTouchPosition;
@@ -73,6 +75,8 @@ public class PlayerController : MonoBehaviour
         //playerRb.rotation = Quaternion.Euler(0, 90, 0);
         positionLeft = Vector3.zero;
         positionRight = Vector3.zero;
+        healthPoints = INITIAL_HEALTH;
+
     }
 
 
@@ -283,16 +287,6 @@ public class PlayerController : MonoBehaviour
         GameManager.sharedInstance.GameOver();
     }
 
-    public void StartGame()
-    {
-        //animator.SetBool(IS_ALIVE, true);
-        //animator.SetBool(IS_ON_THE_GROUND, true);
-        //Me permite invocar el metodo un tiempo despues
-        Invoke("RestartPosition", 0.2f);
-        healthPoints = INITIAL_HEALTH;
-        manaPoints = INITIAL_MANA;
-    }
-
     void RestartPosition()
     {
         if(this.transform.position.x >= 0f)
@@ -311,6 +305,8 @@ public class PlayerController : MonoBehaviour
     public void CollectHealth(int points)
     {
         this.healthPoints += points;
+        lives[healthPoints].gameObject.SetActive(false);
+
         if (this.healthPoints > MAX_HEALTH)
         {
             healthPoints = MAX_HEALTH;
@@ -319,10 +315,7 @@ public class PlayerController : MonoBehaviour
         {
             Die();
         }
-        if (points <= 0)
-        {
-            //animator.SetTrigger("damageEnemy");
-        }
+        
     }
 
     public void CollectMana(int points)
@@ -364,6 +357,10 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("finishAnimation"))
         {
             playerRb.freezeRotation = true;
+        }
+        if (other.CompareTag("KillZone"))
+        {
+            Die();
         }
     }
     private void OnTriggerExit(Collider other)

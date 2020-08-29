@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
         {
             cameras[cameras.Count-1].gameObject.SetActive(true);
         }
-        if ((int)newGameState > 1)
+        if ((int)newGameState > 1 && newGameState !=GameState.gameOver)
         {
             cameras[(int)newGameState - 1].gameObject.SetActive(true);
             cameras[(int)newGameState - 1].Priority += (int)newGameState;

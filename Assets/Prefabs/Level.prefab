@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1412714353245767141}
   - component: {fileID: 7453361811115284271}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: GameObject
-  m_TagString: Untagged
+  m_TagString: KillZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -39,7 +39,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 795128033374556891}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 80.201096}
@@ -1587,9 +1587,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1025176037378735101}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: KillZone
-  m_TagString: Untagged
+  m_TagString: KillZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
