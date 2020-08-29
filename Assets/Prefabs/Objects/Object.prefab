@@ -124,3 +124,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
+  decal: {fileID: 1581041568187257736, guid: 4f1757caffde8d74d91bb1b678c09deb, type: 3}
