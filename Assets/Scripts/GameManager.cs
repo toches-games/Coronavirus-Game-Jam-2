@@ -162,6 +162,6 @@ public class GameManager : MonoBehaviour
     
     public void ResetGame()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 }
