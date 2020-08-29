@@ -33,9 +33,6 @@ public class EnemyManager : MonoBehaviour
 
     [Header("Others")]
 
-    //Referencia a painter
-    public GameObject painter;
-
     //Referencia al martillo que se moverá para atacar en esa posición
     public Transform hammerPosition;
 
@@ -54,6 +51,9 @@ public class EnemyManager : MonoBehaviour
 
     public static EnemyManager sharedInstance;
 
+    [HideInInspector]
+    public bool start;
+
     void Awake()
     {
         if (sharedInstance == null){
@@ -67,17 +67,18 @@ public class EnemyManager : MonoBehaviour
 
     public IEnumerator HammerMovement()
     {
+        yield return new WaitForSeconds(5f);
+        start = true;
+        
+        hammerPosition.position = player.position + player.right * -4f;
+
         while(true){
-            if(!painter.activeSelf){
-                Vector3 targetPosition = hammerPosition.position;
+            Vector3 targetPosition = hammerPosition.position;
 
-                yield return StartCoroutine(AnimateHammer(targetPosition));
+            yield return StartCoroutine(AnimateHammer(targetPosition));
 
-                Transform temp = Instantiate(decals[Random.Range(3, decals.Length)], targetPosition, hammerPosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
-                temp.SetParent(transform);
-
-                yield return null;
-            }
+            Transform temp = Instantiate(decals[Random.Range(3, decals.Length)], targetPosition, hammerPosition.rotation * Quaternion.Euler(0, 180, Random.Range(0f, 360f))).transform;
+            temp.SetParent(transform);
 
             yield return null;
         }
@@ -97,31 +98,30 @@ public class EnemyManager : MonoBehaviour
     }
 
     public IEnumerator DrillMovement(){
-        if(!painter.activeSelf){
-            drillPosition.position = player.position + player.right * -4f;
+        yield return new WaitForSeconds(5f);
+        start = true;
 
-            while(true){
-                Vector3 targetPosition = drillPosition.position;
-                float playerDistance = Vector2.Distance(new Vector2(targetPosition.x, targetPosition.z), new Vector2(player.position.x, player.position.z));
+        drillPosition.position = player.position + player.right * -4f;
 
-                if(playerDistance >= 3f){
-                    if(Random.Range(1, 101) < 2){
-                        close = false;
-                        drillAttack = true;
-                        yield return StartCoroutine(AnimateDrill(targetPosition));
-                    }
+        while(true){
+            Vector3 targetPosition = drillPosition.position;
+            float playerDistance = Vector2.Distance(new Vector2(targetPosition.x, targetPosition.z), new Vector2(player.position.x, player.position.z));
+
+            if(playerDistance >= 3f){
+                if(Random.Range(1, 101) < 2){
+                    close = false;
+                    drillAttack = true;
+                    yield return StartCoroutine(AnimateDrill(targetPosition));
                 }
-
-                else{
-                    close = true;
-                    yield return StartCoroutine(AnimateDrill(targetPosition)); 
-                }
-
-                yield return null;
             }
-        }
 
-        yield return null;
+            else{
+                close = true;
+                yield return StartCoroutine(AnimateDrill(targetPosition)); 
+            }
+
+            yield return null;
+        }
     }
 
     IEnumerator AnimateDrill(Vector3 targetPosition){
@@ -155,16 +155,12 @@ public class EnemyManager : MonoBehaviour
     //para que pueda estar siempre donde el jugador, y colocar los agujeros en dirección
     //a la pared (que es la misma rotación que tendrá el jugador)
     void FixedUpdate(){
-        if(painter.activeSelf){
-            return;
-        }
-
-        if(currentState == GameState.lvl2 || currentState == GameState.lvl4){
+        if((currentState == GameState.lvl2 || currentState == GameState.lvl4) && start){
             hammerPosition.position = player.position;
             hammerPosition.rotation = player.rotation;
         }
 
-        if(currentState == GameState.lvl3 || currentState == GameState.lvl4){
+        if((currentState == GameState.lvl3 || currentState == GameState.lvl4) && start){
             if(!drillAttack){
                 float yDistance = Mathf.Abs(drillPosition.position.y - player.position.y);
 

@@ -78,9 +78,11 @@ public class GameManager : MonoBehaviour
     {
         if(hammerCoroutine != null){
             StopCoroutine(hammerCoroutine);
+            EnemyManager.sharedInstance.start = false;
         }
 
         if(drillCoroutine != null){
+            EnemyManager.sharedInstance.start = false;
             StopCoroutine(drillCoroutine);
         }
 
