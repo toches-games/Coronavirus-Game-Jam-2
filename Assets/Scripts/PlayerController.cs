@@ -38,6 +38,9 @@ public class PlayerController : MonoBehaviour
     public const float SUPERJUMP_FORCE = 2f;
 
     public float jumpRaycastDistance = 0.6f;
+    public float positionSidesRaycast = 0.3f;
+    Vector3 positionLeft;
+    Vector3 positionRight;
 
     //Variables para el conseguir el swipe up y saltar
     Vector2 startTouchPosition, endTouchPosition;
@@ -48,10 +51,8 @@ public class PlayerController : MonoBehaviour
 
     GameState currentState;
     SpriteRenderer sprite;
-    public GameObject shader;
     float lastMovement = 1f;
     bool walking = false;
-    int currentLevel;
 
     private void Awake()
     {
@@ -70,13 +71,10 @@ public class PlayerController : MonoBehaviour
         //transform.rotation = Quaternion.Euler(0, 90, 0);
         //transform.Rotate(0, 90, 0);
         //playerRb.rotation = Quaternion.Euler(0, 90, 0);
+        positionLeft = Vector3.zero;
+        positionRight = Vector3.zero;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     void FixedUpdate()
     {
@@ -86,12 +84,74 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        switch (currentState)
+        {
+            case GameState.lvl1:
+                playerRb.velocity = new Vector3(lastMovement,
+                                                playerRb.velocity.y, 0);
+                positionLeft = new Vector3(transform.position.x - positionSidesRaycast,
+                                    transform.position.y, transform.position.z);
+                positionRight = new Vector3(transform.position.x + positionSidesRaycast,
+                                            transform.position.y, transform.position.z);
+
+
+                break;
+
+            case GameState.lvl2:
+                playerRb.velocity = new Vector3(0, playerRb.velocity.y,
+                                                -lastMovement);
+                positionLeft = new Vector3(transform.position.x, transform.position.y,
+                                            transform.position.z + positionSidesRaycast);
+                positionRight = new Vector3(transform.position.x, transform.position.y,
+                                            transform.position.z - positionSidesRaycast);
+
+                break;
+
+            case GameState.lvl3:
+                playerRb.velocity = new Vector3(-lastMovement,
+                                                playerRb.velocity.y, 0);
+                positionLeft = new Vector3(transform.position.x + positionSidesRaycast,
+                                            transform.position.y, transform.position.z);
+                positionRight = new Vector3(transform.position.x - positionSidesRaycast,
+                                            transform.position.y, transform.position.z);
+
+                break;
+
+            case GameState.lvl4:
+                playerRb.velocity = new Vector3(0, playerRb.velocity.y,
+                                                lastMovement);
+                positionLeft = new Vector3(transform.position.x + positionSidesRaycast,
+                                            transform.position.y, transform.position.z);
+                positionRight = new Vector3(transform.position.x - positionSidesRaycast,
+                                            transform.position.y, transform.position.z);
+                /**
+                positionLeft = new Vector3(transform.position.x, transform.position.y,
+                                            transform.position.z - positionSidesRaycast);
+                positionRight = new Vector3(transform.position.x, transform.position.y,
+                                            transform.position.z + positionSidesRaycast);
+                **/
+                break;
+
+            case GameState.lvl5:
+                playerRb.velocity = new Vector3(lastMovement,
+                            playerRb.velocity.y, 0);
+
+                break;
+        }
+
         if (Input.GetButtonDown("Jump"))
         {
             Jump();
         }
+        
+        //Debug.DrawRay(this.transform.position, Vector3.down * jumpRaycastDistance, Color.red);
+        Debug.DrawRay(positionLeft, Vector3.down * jumpRaycastDistance, Color.red);
+        Debug.DrawRay(positionRight, Vector3.down * jumpRaycastDistance, Color.red);
+        //Debug.Log(positionRight);
+        //Debug.Log(positionLeft);
+        //Debug.DrawRay(this.transform.position, Vector3.down * jumpRaycastDistance, Color.red);
 
-        Debug.DrawRay(this.transform.position, Vector3.down * jumpRaycastDistance, Color.red);
+
         walking = false;
         
         if (Input.GetAxis(HORIZONTAL) >= 0.2 || Input.GetAxis(HORIZONTAL) <= -0.2)
@@ -99,36 +159,7 @@ public class PlayerController : MonoBehaviour
             walking = true;
             lastMovement = Input.GetAxis(HORIZONTAL) * runningSpeed;
 
-            switch (currentState)
-            {
-                case GameState.lvl1:
-                    playerRb.velocity = new Vector3(lastMovement,
-                                                    playerRb.velocity.y, 0);
-
-                    break;
-                case GameState.lvl2:
-                    playerRb.velocity = new Vector3(0, playerRb.velocity.y,
-                                                    -lastMovement);
-
-                    break;
-                case GameState.lvl3:
-                    playerRb.velocity = new Vector3(-lastMovement,
-                                                    playerRb.velocity.y, 0);
-                        
-                    break;
-                case GameState.lvl4:
-                    playerRb.velocity = new Vector3(0, playerRb.velocity.y,
-                                                    lastMovement);
-
-                    break;
-                case GameState.lvl5:
-                    playerRb.velocity = new Vector3(lastMovement,
-                                playerRb.velocity.y, 0);
-
-                    break;
-                case GameState.lvl6:
-                    break;
-            }
+            
 
 
         }
@@ -150,38 +181,23 @@ public class PlayerController : MonoBehaviour
             playerRb.velocity = new Vector3(playerRb.velocity.x, 0f, playerRb.velocity.z);
         }
 
-
-        /**
-        if (lastMovement < runningSpeed)
-        {
-            playerRb.velocity = new Vector2(runningSpeed,
-                                            playerRb.velocity.y
-                                            );
-        }
-        //Aumento de velocidad del jugador
-        if ((int)GetTraveledDistance() % 55 == 0 && GetTraveledDistance() > 10f)
-        {
-            runningSpeed += 0.03f;
-        }
-        **/
-
         animator.SetFloat(HORIZONTAL, Input.GetAxis(HORIZONTAL));
         animator.SetBool(WALKING_STATE, walking);
         animator.SetFloat(LAST_HORIZONTAL, lastMovement);
         animator.SetFloat(VERTICAL, playerRb.velocity.y);
         animator.SetBool(IS_TOUCHING_GROUND, IsTouchingTheGround());
-        Debug.Log(GameManager.sharedInstance.currentGameState);
     }
 
     public void Jump()
     {
-        if (IsTouchingTheGround() && currentState != GameState.menu && currentState != GameState.gameOver)
+        if (IsTouchingTheGround())
         {
             //ForceMode2D me dos opcionesm force que seria como una 
             //fuerza constante e impulse que seria como aplicar una
             //fuerza en instante nada mas.
             playerRb.AddForce(Vector2.up * jumpForce, ForceMode.Impulse);
             //GetComponent<AudioSource>().Play();
+
         }
     }
 
@@ -210,15 +226,45 @@ public class PlayerController : MonoBehaviour
 
     bool IsTouchingTheGround()
     {
-        if (Physics.Raycast(this.transform.position, 
-            Vector3.down, jumpRaycastDistance, groundMask)) 
+        if (Physics.Raycast(positionRight,
+            Vector3.down, jumpRaycastDistance, groundMask))
         {
+
+            return true;
+        }else
+        if (Physics.Raycast(positionLeft,
+        Vector3.down, jumpRaycastDistance, groundMask))
+        {
+
             return true;
         }
         else
         {
             return false;
         }
+
+        /**
+        if (Physics.Raycast(positionLeft,
+            Vector3.down, jumpRaycastDistance, groundMask))
+        {
+            return true;
+        }
+        else
+        if (Physics.Raycast(positionRight,
+            Vector3.down, jumpRaycastDistance, groundMask))
+        {
+            return true;
+        }
+
+        if (Physics.Raycast(this.transform.position, 
+            Vector3.down, jumpRaycastDistance, groundMask))
+        {
+            Debug.Log("Ground");
+
+            return true;
+        
+        }
+        **/
     }
 
     public void Die()
@@ -307,22 +353,15 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("initAnimation"))
         {
-            //playableDirector.Play();
+            //  Director.Play();
             GameManager.sharedInstance.NextLevel(((int)GameManager.sharedInstance.currentGameState) + 1);
-            sprite.enabled = false;
-            shader.SetActive(true);
+            Debug.Log(((int)GameManager.sharedInstance.currentGameState) + 1);
             playerRb.freezeRotation = false;
             other.GetComponent<BoxCollider>().enabled = false;
+            Debug.Log("Entra");
         }
         if (other.CompareTag("finishAnimation"))
         {
-            //playerRb.MoveRotation(Quaternion.Euler(0, 90, 0));
-            //transform.rotation = Quaternion.Euler(0, 90, 0);
-            //transform.Rotate(0, 90, 0);
-            //playerRb.rotation = Quaternion.Euler(0, 90, 0);
-            //playerRb.rotation = Quaternion.Euler(0, 90, 0);
-            sprite.enabled = true;
-            shader.SetActive(false);
             playerRb.freezeRotation = true;
         }
     }
@@ -335,6 +374,7 @@ public class PlayerController : MonoBehaviour
             Destroy(GameObject.Find("Platforms" + ((int)GameManager.sharedInstance.currentGameState - 1)));
 
         }
+
     }
 
 }

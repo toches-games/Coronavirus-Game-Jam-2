@@ -6,6 +6,8 @@ TagManager:
   tags:
   - initAnimation
   - finishAnimation
+  - InitPainter
+  - FinishPainter
   layers:
   - Default
   - TransparentFX

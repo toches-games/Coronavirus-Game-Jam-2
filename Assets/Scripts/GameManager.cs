@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.Playables;
+using UnityEngine.SceneManagement;
 
 //Aqui realizamos todo el manejo de los estados del juego, cambio
 //de escenas cuando pierde, menu principal y modo jugando.
@@ -143,9 +144,13 @@ public class GameManager : MonoBehaviour
             cameras[(int)newGameState - 1].gameObject.SetActive(true);
             cameras[(int)newGameState - 1].Priority += (int)newGameState;
             playableDirector[(int)newGameState - 2].Play();
-            cameras[(int)newGameState].gameObject.SetActive(false);
+            cameras[(int)newGameState-2].gameObject.SetActive(false);
         }
         this.currentGameState = newGameState;
     }
-
+    
+    public void ResetGame()
+    {
+        SceneManager.LoadScene(0);
+    }
 }
