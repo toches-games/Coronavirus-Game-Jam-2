@@ -136,12 +136,17 @@ public class GameManager : MonoBehaviour
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX
                                                                 | RigidbodyConstraints.FreezeRotation;
         }
+        else if(newGameState == GameState.lvl5)
+        {
+            controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX
+                                                                | RigidbodyConstraints.FreezeRotation;
+        }
         else if (newGameState == GameState.gameOver)
         {
-            //MenuManager.sharedInstance.Invoke("ShowGameOverMenu",1.8f);
-            //MenuManager.sharedInstance.Invoke("HideGameScore",1.8f);
+            cameras[cameras.Count-1].gameObject.SetActive(true);
         }
-        if((int)newGameState > 1)
+        if ((int)newGameState > 1)
         {
             cameras[(int)newGameState - 1].gameObject.SetActive(true);
             cameras[(int)newGameState - 1].Priority += (int)newGameState;

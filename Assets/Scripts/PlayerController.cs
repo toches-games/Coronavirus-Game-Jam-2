@@ -31,8 +31,8 @@ public class PlayerController : MonoBehaviour
 
     int healthPoints, manaPoints;
 
-    public const int INITIAL_HEALTH = 200, INITIAL_MANA = 15,
-        MIN_HEALTH = 10, MIN_MANA = 0, MAX_HEALTH = 200, MAX_MANA = 30;
+    public const int INITIAL_HEALTH = 3, INITIAL_MANA = 15,
+        MIN_HEALTH = 1, MIN_MANA = 0, MAX_HEALTH = 3, MAX_MANA = 30;
 
     public const int SUPERJUMP_COST = 10;
     public const float SUPERJUMP_FORCE = 2f;
@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
                                     transform.position.y, transform.position.z);
                 positionRight = new Vector3(transform.position.x + positionSidesRaycast,
                                             transform.position.y, transform.position.z);
-
+                jumpForce = 10;
 
                 break;
 
@@ -120,21 +120,21 @@ public class PlayerController : MonoBehaviour
             case GameState.lvl4:
                 playerRb.velocity = new Vector3(0, playerRb.velocity.y,
                                                 lastMovement);
-                positionLeft = new Vector3(transform.position.x + positionSidesRaycast,
-                                            transform.position.y, transform.position.z);
-                positionRight = new Vector3(transform.position.x - positionSidesRaycast,
-                                            transform.position.y, transform.position.z);
-                /**
                 positionLeft = new Vector3(transform.position.x, transform.position.y,
-                                            transform.position.z - positionSidesRaycast);
-                positionRight = new Vector3(transform.position.x, transform.position.y,
                                             transform.position.z + positionSidesRaycast);
-                **/
+                positionRight = new Vector3(transform.position.x, transform.position.y,
+                                            transform.position.z - positionSidesRaycast);
+                
                 break;
 
             case GameState.lvl5:
-                playerRb.velocity = new Vector3(lastMovement,
-                            playerRb.velocity.y, 0);
+                playerRb.velocity = new Vector3(0, playerRb.velocity.y,
+                                                lastMovement);
+                positionLeft = new Vector3(transform.position.x, transform.position.y,
+                                            transform.position.z + positionSidesRaycast);
+                positionRight = new Vector3(transform.position.x, transform.position.y,
+                                            transform.position.z - positionSidesRaycast);
+                jumpForce = 7;
 
                 break;
         }
@@ -145,8 +145,8 @@ public class PlayerController : MonoBehaviour
         }
         
         //Debug.DrawRay(this.transform.position, Vector3.down * jumpRaycastDistance, Color.red);
-        Debug.DrawRay(positionLeft, Vector3.down * jumpRaycastDistance, Color.red);
-        Debug.DrawRay(positionRight, Vector3.down * jumpRaycastDistance, Color.red);
+        Debug.DrawRay(positionLeft, -transform.up * jumpRaycastDistance, Color.red);
+        Debug.DrawRay(positionRight, -transform.up * jumpRaycastDistance, Color.red);
         //Debug.Log(positionRight);
         //Debug.Log(positionLeft);
         //Debug.DrawRay(this.transform.position, Vector3.down * jumpRaycastDistance, Color.red);
@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour
         //Si está en el aire
         if (!IsTouchingTheGround()){
             //Se le aplica una fuerza hacia abajo para que caiga
-            playerRb.AddForce(Vector3.up * -gravity, ForceMode.Acceleration);
+            playerRb.AddForce(transform.up * -gravity, ForceMode.Acceleration);
         }
 
         else{
@@ -195,9 +195,10 @@ public class PlayerController : MonoBehaviour
             //ForceMode2D me dos opcionesm force que seria como una 
             //fuerza constante e impulse que seria como aplicar una
             //fuerza en instante nada mas.
-            playerRb.AddForce(Vector2.up * jumpForce, ForceMode.Impulse);
+            
+            playerRb.AddRelativeForce(Vector3.up * jumpForce, ForceMode.Impulse);
             //GetComponent<AudioSource>().Play();
-
+            Debug.Log(transform.rotation);
         }
     }
 
@@ -227,13 +228,13 @@ public class PlayerController : MonoBehaviour
     bool IsTouchingTheGround()
     {
         if (Physics.Raycast(positionRight,
-            Vector3.down, jumpRaycastDistance, groundMask))
+            -transform.up, jumpRaycastDistance, groundMask))
         {
 
             return true;
         }else
         if (Physics.Raycast(positionLeft,
-        Vector3.down, jumpRaycastDistance, groundMask))
+            -transform.up, jumpRaycastDistance, groundMask))
         {
 
             return true;
@@ -269,14 +270,14 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
-        float travelledDistance = GetTraveledDistance();
+        //float travelledDistance = GetTraveledDistance();
         //PlayerPrefs funciona como una variable que puede guardar y permite
         //acceder a valores entre sesiones de juego (investigar mas)
-        float previousMaxDistance = PlayerPrefs.GetFloat("maxScore", 0f);
-        if (travelledDistance > previousMaxDistance)
-        {
-            PlayerPrefs.SetFloat("maxScore", travelledDistance);
-        }
+        //float previousMaxDistance = PlayerPrefs.GetFloat("maxScore", 0f);
+        //if (travelledDistance > previousMaxDistance)
+        //{
+        //    PlayerPrefs.SetFloat("maxScore", travelledDistance);
+        //}
 
         //animator.SetBool(IS_ALIVE, false);
         GameManager.sharedInstance.GameOver();
@@ -358,7 +359,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log(((int)GameManager.sharedInstance.currentGameState) + 1);
             playerRb.freezeRotation = false;
             other.GetComponent<BoxCollider>().enabled = false;
-            Debug.Log("Entra");
+
         }
         if (other.CompareTag("finishAnimation"))
         {
@@ -371,8 +372,7 @@ public class PlayerController : MonoBehaviour
         {
             //playableDirector.Stop();
             other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
-            Destroy(GameObject.Find("Platforms" + ((int)GameManager.sharedInstance.currentGameState - 1)));
-
+            //Destroy(GameObject.Find("Platforms" + ((int)GameManager.sharedInstance.currentGameState - 1)));
         }
 
     }
