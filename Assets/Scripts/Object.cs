@@ -26,8 +26,8 @@ public class Object : MonoBehaviour
         audio.GetComponent<ObjectShooter>().PlayCrak();
         Instantiate(decal, col.GetContact(0).point, Quaternion.FromToRotation(Vector3.forward, col.GetContact(0).normal));
         
-        if(col.CompareTag("Player")){
-            col.GetComponent<PlayerController>().CollectHealth(-1);
+        if(col.transform.CompareTag("Player")){
+            col.transform.GetComponent<PlayerController>().CollectHealth(-1);
         }
 
         Destroy(gameObject);
