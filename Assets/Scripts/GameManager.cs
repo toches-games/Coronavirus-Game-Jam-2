@@ -87,6 +87,7 @@ public class GameManager : MonoBehaviour
         }*/
 
         StopAllCoroutines();
+        EnemyManager.sharedInstance.start = false;
 
         SetGameState((GameState)lvl);
     }
