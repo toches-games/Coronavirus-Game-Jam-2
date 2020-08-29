@@ -24657,7 +24657,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 20, z: 1}
-  m_Center: {x: 2, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1672772065
 GameObject:
   m_ObjectHideFlags: 0
@@ -31259,7 +31259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hammerDelayAttack: 5
-  hammerSpeed: 5
+  hammerSpeed: 4
   drillDelayAttack: 5
   drillSpeed: 3
   decals:

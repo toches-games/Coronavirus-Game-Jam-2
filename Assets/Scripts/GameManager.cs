@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
 
     public void NextLevel(int lvl)
     {
-        if(hammerCoroutine != null){
+        /*if(hammerCoroutine != null){
             StopCoroutine(hammerCoroutine);
             EnemyManager.sharedInstance.start = false;
         }
@@ -84,7 +84,9 @@ public class GameManager : MonoBehaviour
         if(drillCoroutine != null){
             EnemyManager.sharedInstance.start = false;
             StopCoroutine(drillCoroutine);
-        }
+        }*/
+
+        StopAllCoroutines();
 
         SetGameState((GameState)lvl);
     }
