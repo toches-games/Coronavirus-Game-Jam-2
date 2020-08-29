@@ -140,6 +140,7 @@ public class GameManager : MonoBehaviour
         }
         else if(newGameState == GameState.lvl5)
         {
+            EnemyManager.sharedInstance.objectShooter.SetActive(true);
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX
                                                                 | RigidbodyConstraints.FreezeRotation;

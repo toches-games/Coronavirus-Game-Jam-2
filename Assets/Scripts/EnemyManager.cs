@@ -33,6 +33,8 @@ public class EnemyManager : MonoBehaviour
 
     [Header("Others")]
 
+    public GameObject objectShooter;
+
     //Referencia al martillo que se moverá para atacar en esa posición
     public Transform hammerPosition;
 

@@ -12,12 +12,19 @@ public class ObjectShooter : MonoBehaviour
 
     public Transform camera;
 
+    AudioSource audioSource;
+
+    void Awake(){
+        audioSource = GetComponent<AudioSource>();
+    }
+
     // Start is called before the first frame update
     IEnumerator Start()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(8f);
 
         while(true){
+            audioSource.Play();
             Instantiate(objects[Random.Range(0, objects.Length)], transform.position, transform.rotation);
             yield return new WaitForSeconds(speedAttack);
         }
