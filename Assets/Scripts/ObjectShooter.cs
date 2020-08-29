@@ -12,10 +12,10 @@ public class ObjectShooter : MonoBehaviour
 
     public Transform camera;
 
-    AudioSource audioSource;
+    AudioSource crack;
 
     void Awake(){
-        audioSource = GetComponent<AudioSource>();
+        crack = GetComponents<AudioSource>()[0];
     }
 
     // Start is called before the first frame update
@@ -24,7 +24,6 @@ public class ObjectShooter : MonoBehaviour
         yield return new WaitForSeconds(8f);
 
         while(true){
-            audioSource.Play();
             Instantiate(objects[Random.Range(0, objects.Length)], transform.position, transform.rotation);
             yield return new WaitForSeconds(speedAttack);
         }
@@ -33,5 +32,9 @@ public class ObjectShooter : MonoBehaviour
     void Update(){
         transform.position = camera.position + Vector3.up * -2f;
         transform.LookAt(target.position);
+    }
+
+    public void PlayCrak(){
+        crack.Play();
     }
 }
