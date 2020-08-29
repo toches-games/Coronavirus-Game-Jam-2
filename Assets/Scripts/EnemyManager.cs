@@ -61,6 +61,8 @@ public class EnemyManager : MonoBehaviour
     AudioSource hammerSource;
     AudioSource drillSource;
 
+    Vector3 drillAttackPosition;
+
     void Awake()
     {
         if (sharedInstance == null){
@@ -151,8 +153,10 @@ public class EnemyManager : MonoBehaviour
 
             if(angle <= 90/drillDelayAttack){
                 //animate.localRotation = Quaternion.Euler(new Vector3(-90, 0, Random.Range(0f, 10f)));
-                Vector3 particlePosition = new Vector3(animate.position.x + 2.1f, targetPosition.y, drillPosition.position.z);
-                Transform temp = Instantiate(crack[crackCount++], particlePosition, drillPosition.rotation * Quaternion.Euler(0, 180, 0)).transform;
+                //Vector3 particlePosition = new Vector3(animate.position.x + 2.1f, targetPosition.y, drillPosition.position.z);
+                //Vector3 particlePosition = tr animate.position.x + 2.1f, targetPosition.y, drillPosition.position.z);
+
+                Transform temp = Instantiate(crack[crackCount++], drillAttackPosition, drillPosition.rotation * Quaternion.Euler(0, 180, 0)).transform;
                 temp.SetParent(transform);
             }
 
@@ -188,6 +192,13 @@ public class EnemyManager : MonoBehaviour
             if(!close){
                 drillPosition.MovePosition(drillPosition.position + drillPosition.transform.right * drillSpeed * Time.deltaTime);
                 drillPosition.rotation = player.rotation;
+            }
+            
+            Debug.DrawRay(drillPosition.position, drillPosition.transform.forward, Color.green);
+
+            RaycastHit hit;
+            if(Physics.Raycast(drillPosition.transform.GetChild(0).position + drillPosition.transform.forward * -2f, drillPosition.transform.forward, out hit)){
+                drillAttackPosition = hit.point;
             }
         }
     }
