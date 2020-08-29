@@ -14,7 +14,7 @@ public class Hole : MonoBehaviour
     void OnTriggerEnter(Collider other){
         //Si choca con el jugador
         if(other.name == "Player"){
-            print("Jugador golpeado!");
+            other.GetComponent<PlayerController>().CollectHealth(-1);
         }
     }
 }

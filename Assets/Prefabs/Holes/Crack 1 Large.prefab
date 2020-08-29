@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1581041568187257738}
   - component: {fileID: 1581041568187257737}
-  - component: {fileID: 3592901823200887840}
   - component: {fileID: 3342612272291239732}
   m_Layer: 0
   m_Name: Crack 1 Large
@@ -85,18 +84,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3592901823200887840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1581041568187257736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 721183f779fbac84dad0c295a3377140, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &3342612272291239732
 BoxCollider:
   m_ObjectHideFlags: 0

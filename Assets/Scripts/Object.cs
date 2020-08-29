@@ -25,7 +25,11 @@ public class Object : MonoBehaviour
     void OnCollisionEnter(Collision col){
         audio.GetComponent<ObjectShooter>().PlayCrak();
         Instantiate(decal, col.GetContact(0).point, Quaternion.FromToRotation(Vector3.forward, col.GetContact(0).normal));
-        rig.useGravity = true;
+        
+        if(col.CompareTag("Player")){
+            col.GetComponent<PlayerController>().CollectHealth(-1);
+        }
+
         Destroy(gameObject);
     }
 }
