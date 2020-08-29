@@ -33,6 +33,8 @@ public class EnemyManager : MonoBehaviour
 
     [Header("Others")]
 
+    public GameObject objectShooter;
+
     //Referencia al martillo que se moverá para atacar en esa posición
     public Transform hammerPosition;
 
@@ -150,7 +152,7 @@ public class EnemyManager : MonoBehaviour
             else{
                 if(Random.Range(1, 101) < 2){
                     drillAttack = true;
-                    if(!start){
+                    if(start){
                         yield return new WaitForSeconds(0.5f);
                     }
                     drillSource.clip = drillClips[Random.Range(0, drillClips.Length)];

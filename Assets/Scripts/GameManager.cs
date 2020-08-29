@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour
         }*/
 
         StopAllCoroutines();
+        EnemyManager.sharedInstance.start = false;
 
         SetGameState((GameState)lvl);
     }
@@ -143,6 +144,7 @@ public class GameManager : MonoBehaviour
         }
         else if(newGameState == GameState.lvl5)
         {
+            EnemyManager.sharedInstance.objectShooter.SetActive(true);
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX
                                                                 | RigidbodyConstraints.FreezeRotation;
@@ -168,7 +170,7 @@ public class GameManager : MonoBehaviour
     
     public void ResetGame()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(1);
     }
 
     public void ShowHUD()
