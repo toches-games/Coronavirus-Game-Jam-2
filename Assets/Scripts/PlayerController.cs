@@ -79,7 +79,13 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
+    private void Update()
+    {
+        if (Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
+    }
     void FixedUpdate()
     {
         currentState = GameManager.sharedInstance.currentGameState;
@@ -143,10 +149,7 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        if (Input.GetButtonDown("Jump"))
-        {
-            Jump();
-        }
+        
         
         //Debug.DrawRay(this.transform.position, Vector3.down * jumpRaycastDistance, Color.red);
         Debug.DrawRay(positionLeft, -transform.up * jumpRaycastDistance, Color.red);
