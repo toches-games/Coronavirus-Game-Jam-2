@@ -12,6 +12,10 @@ public class Hole : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other){
+        if(!EnemyManager.sharedInstance.start){
+            return;
+        }
+        
         //Si choca con el jugador
         if(other.name == "Player"){
             other.GetComponent<PlayerController>().CollectHealth(-1);
