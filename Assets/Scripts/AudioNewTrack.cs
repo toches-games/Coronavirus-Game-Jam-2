@@ -38,4 +38,9 @@ public class AudioNewTrack : MonoBehaviour
     {
         manager.PlayNewTrack(newTrackID);
     }
+
+    public void StopSound()
+    {
+        manager.StopSound();
+    }
 }

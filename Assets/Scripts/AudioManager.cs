@@ -30,4 +30,10 @@ public class AudioManager : MonoBehaviour
         currentTrack = newTrack;
         audioTracks[currentTrack].Play();
     }
+
+    public void StopSound()
+    {
+        audioTracks[currentTrack].Stop();
+
+    }
 }

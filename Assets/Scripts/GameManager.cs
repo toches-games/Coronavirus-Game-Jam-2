@@ -65,8 +65,11 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void Win(){
-        print("Ganó el jugador!");
+    public void Win()
+    {
+        newTrack.StopSound();
+        controller.StopAllSFX();
+        SceneManager.LoadSceneAsync(2);
     }
 
     public void GameOver()

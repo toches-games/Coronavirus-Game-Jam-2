@@ -298,6 +298,8 @@ public class PlayerController : MonoBehaviour
         sfx.muerte.Play();
         //animator.SetBool(IS_ALIVE, false);
         GameManager.sharedInstance.GameOver();
+        sfx.paso.Stop();
+        sfx.salto.Stop();
     }
 
     void RestartPosition()
@@ -359,6 +361,12 @@ public class PlayerController : MonoBehaviour
         return this.transform.position.x - startPosition.x;
     }
 
+    public void StopAllSFX()
+    {
+        sfx.salto.Stop();
+        sfx.paso.Stop();
+
+    }
 
     private void OnTriggerEnter(Collider other)
     {
