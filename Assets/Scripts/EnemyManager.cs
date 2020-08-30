@@ -80,13 +80,26 @@ public class EnemyManager : MonoBehaviour
 
     public IEnumerator HammerMovement()
     {
-        yield return new WaitForSeconds(5f);
-        hammerPosition.position = player.position + player.right * -4f;
+        int hammerCount = 0;
+        //yield return new WaitForSeconds(5f);
+        //hammerPosition.position = player.position + player.right * -4f;
 
-        start = true;
+        //start = true;
 
         while(true){
             Vector3 targetPosition = hammerPosition.position;
+
+            if(!start){
+                if(hammerCount < 3){
+                    targetPosition = player.position + Vector3.up * 2f;
+                    hammerCount++;
+                }
+
+                else{
+                    start = true;
+                    yield return new WaitForSeconds(3f);
+                }
+            }
 
                 yield return StartCoroutine(AnimateHammer(targetPosition));
 
@@ -113,30 +126,38 @@ public class EnemyManager : MonoBehaviour
     }
 
     public IEnumerator DrillMovement(){
-        yield return new WaitForSeconds(5f);
-        drillPosition.position = player.position + player.right * -4f;
-        start = true;
+        int drillCount = 0;
 
         while(true){
             Vector3 targetPosition = drillPosition.position;
             float playerDistance = Vector2.Distance(new Vector2(targetPosition.x, targetPosition.z), new Vector2(player.position.x, player.position.z));
 
-                if(playerDistance >= 3f){
-                    if(Random.Range(1, 101) < 2){
-                        close = false;
-                        drillAttack = true;
-                        drillSource.clip = drillClips[Random.Range(0, drillClips.Length)];
-                        drillSource.Play();
-                        yield return StartCoroutine(AnimateDrill(targetPosition));
-                    }
+            if(!start){
+                if(drillCount < 2){
+                    drillAttack = true;
+                    drillSource.clip = drillClips[Random.Range(0, drillClips.Length)];
+                    drillSource.Play();
+                    yield return StartCoroutine(AnimateDrill(targetPosition));
+                    drillCount++;
                 }
 
                 else{
-                    close = true;
+                    start = true;
+                    yield return new WaitForSeconds(5f);
+                }
+            }
+
+            else{
+                if(Random.Range(1, 101) < 2){
+                    drillAttack = true;
+                    if(!start){
+                        yield return new WaitForSeconds(0.5f);
+                    }
                     drillSource.clip = drillClips[Random.Range(0, drillClips.Length)];
                     drillSource.Play();
-                    yield return StartCoroutine(AnimateDrill(targetPosition)); 
+                    yield return StartCoroutine(AnimateDrill(targetPosition));
                 }
+            }
 
             yield return null;
         }
@@ -152,10 +173,6 @@ public class EnemyManager : MonoBehaviour
             angle++;
 
             if(angle <= 90/drillDelayAttack){
-                //animate.localRotation = Quaternion.Euler(new Vector3(-90, 0, Random.Range(0f, 10f)));
-                //Vector3 particlePosition = new Vector3(animate.position.x + 2.1f, targetPosition.y, drillPosition.position.z);
-                //Vector3 particlePosition = tr animate.position.x + 2.1f, targetPosition.y, drillPosition.position.z);
-
                 Transform temp = Instantiate(crack[crackCount++], drillAttackPosition, drillPosition.rotation * Quaternion.Euler(0, 180, 0)).transform;
                 temp.SetParent(transform);
             }
@@ -175,26 +192,26 @@ public class EnemyManager : MonoBehaviour
     //para que pueda estar siempre donde el jugador, y colocar los agujeros en dirección
     //a la pared (que es la misma rotación que tendrá el jugador)
     void FixedUpdate(){
-        if((currentState == GameState.lvl2 || currentState == GameState.lvl4) && start){
+        if((currentState == GameState.lvl2 || currentState == GameState.lvl4)){
             hammerPosition.position = player.position;
             hammerPosition.rotation = player.rotation;
         }
 
-        if((currentState == GameState.lvl3 || currentState == GameState.lvl4) && start){
-            if(!drillAttack){
-                float yDistance = Mathf.Abs(drillPosition.position.y - player.position.y);
-
-                drillPosition.position = new Vector3(drillPosition.position.x,
-                    Mathf.MoveTowards(drillPosition.position.y, player.position.y, yDistance * drillSpeed * 2 * Time.deltaTime),
-                    drillPosition.position.z);
-            }
-
-            if(!close){
-                drillPosition.MovePosition(drillPosition.position + drillPosition.transform.right * drillSpeed * Time.deltaTime);
-                drillPosition.rotation = player.rotation;
-            }
+        if((currentState == GameState.lvl3 || currentState == GameState.lvl4)){
+            float playerDistance = Vector2.Distance(new Vector2(drillPosition.position.x, drillPosition.position.z), new Vector2(player.position.x, player.position.z));
             
-            Debug.DrawRay(drillPosition.position, drillPosition.transform.forward, Color.green);
+            drillPosition.rotation = player.rotation;
+            
+            if(!drillAttack){
+                if(playerDistance > 3f){
+                    drillPosition.position = Vector3.MoveTowards(drillPosition.position, player.position + player.right * -3f, playerDistance * drillSpeed * Time.deltaTime);
+                }
+            }
+
+            else if(playerDistance < 3f){
+                Vector3 targetClose = new Vector3(drillPosition.position.x, player.position.y, drillPosition.position.z);
+                drillPosition.position = Vector3.MoveTowards(drillPosition.position, targetClose, playerDistance * drillSpeed * Time.deltaTime);
+            }
 
             RaycastHit hit;
             if(Physics.Raycast(drillPosition.transform.GetChild(0).position + drillPosition.transform.forward * -2f + drillPosition.transform.up * 0.95f, drillPosition.transform.forward, out hit)){
