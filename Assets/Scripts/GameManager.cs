@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public List<PlayableDirector> playableDirector;
     public GameObject hud;
     public GameObject gameOver_Display;
+    AudioNewTrack newTrack;
 
     //Guarda las coroutinas de las herramientas para detenerlas en cada cambio de nivel
     Coroutine hammerCoroutine;
@@ -59,6 +60,7 @@ public class GameManager : MonoBehaviour
             backgroundAudioSource.Play();
         }
         **/
+        newTrack = FindObjectOfType<AudioNewTrack>();
         NextLevel(1);
 
     }
@@ -152,6 +154,7 @@ public class GameManager : MonoBehaviour
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX
                                                                 | RigidbodyConstraints.FreezeRotation;
+            newTrack.ChangeTrack(4);
         }
         else if (newGameState == GameState.gameOver)
         {

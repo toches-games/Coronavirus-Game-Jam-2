@@ -55,12 +55,14 @@ public class PlayerController : MonoBehaviour
     SpriteRenderer sprite;
     float lastMovement = 1f;
     bool walking = false;
+    SFXManager sfx;
 
     private void Awake()
     {
         playerRb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         sprite = GetComponent<SpriteRenderer>();
+        sfx = FindObjectOfType<SFXManager>();
     }
 
     // Start is called before the first frame update
@@ -165,7 +167,6 @@ public class PlayerController : MonoBehaviour
         {
             walking = true;
             lastMovement = Input.GetAxis(HORIZONTAL) * runningSpeed;
-
             
 
 
@@ -174,6 +175,8 @@ public class PlayerController : MonoBehaviour
         if (!walking)
         {
             playerRb.velocity = new Vector3(0, playerRb.velocity.y, 0);
+            sfx.paso.Stop();
+
         }
 
         //Si está en el aire
@@ -186,6 +189,13 @@ public class PlayerController : MonoBehaviour
             //Si está en el suelo se pone la velocidad en y a 0 para que
             //no se ralentice por el peso de la gravedad que traia al caer
             playerRb.velocity = new Vector3(playerRb.velocity.x, 0f, playerRb.velocity.z);
+            if (walking)
+            {
+                if (!sfx.paso.isPlaying)
+                {
+                    sfx.paso.Play();
+                }
+            }
         }
 
         animator.SetFloat(HORIZONTAL, Input.GetAxis(HORIZONTAL));
@@ -205,7 +215,7 @@ public class PlayerController : MonoBehaviour
             
             playerRb.AddRelativeForce(Vector3.up * jumpForce, ForceMode.Impulse);
             //GetComponent<AudioSource>().Play();
-            Debug.Log(transform.rotation);
+            sfx.salto.Play();
         }
     }
 
@@ -285,7 +295,7 @@ public class PlayerController : MonoBehaviour
         //{
         //    PlayerPrefs.SetFloat("maxScore", travelledDistance);
         //}
-
+        sfx.muerte.Play();
         //animator.SetBool(IS_ALIVE, false);
         GameManager.sharedInstance.GameOver();
     }
@@ -317,6 +327,10 @@ public class PlayerController : MonoBehaviour
         if (this.healthPoints <= 0)
         {
             Die();
+        }
+        else
+        {
+            sfx.herida.Play();
         }
         
     }
@@ -355,7 +369,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log(((int)GameManager.sharedInstance.currentGameState) + 1);
             playerRb.freezeRotation = false;
             other.GetComponent<BoxCollider>().enabled = false;
-
+            sfx.alerta.Play();
         }
         if (other.CompareTag("finishAnimation"))
         {
