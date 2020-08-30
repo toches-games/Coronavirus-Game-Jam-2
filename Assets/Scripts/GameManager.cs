@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
             cameras[(int)newGameState - 1].Priority += (int)newGameState;
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ
                                                                 | RigidbodyConstraints.FreezeRotation;
-            Invoke("ShowHUD", 2.2f);
+            Invoke("ShowHUD", 2f);
         }
         else if (newGameState == GameState.lvl2)
         {
