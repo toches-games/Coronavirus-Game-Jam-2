@@ -63,6 +63,10 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void Win(){
+        print("Ganó el jugador!");
+    }
+
     public void GameOver()
     {
         SetGameState(GameState.gameOver);

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ObjectShooter : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class ObjectShooter : MonoBehaviour
     public float speedAttack;
     public int initHealth;
 
+    public Slider sliderHealth;
 
     public GameObject[] objects;
 
@@ -27,6 +29,7 @@ public class ObjectShooter : MonoBehaviour
     IEnumerator Start()
     {
         currentHealth = initHealth;
+        sliderHealth.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(8f);
 
@@ -48,6 +51,11 @@ public class ObjectShooter : MonoBehaviour
 
     public void Damage(int damage){
         currentHealth -= damage;
-        print(currentHealth);
+        sliderHealth.value = currentHealth;
+
+        if(currentHealth <= 0){
+            GameManager.sharedInstance.Win();
+            Destroy(gameObject);
+        }
     }
 }

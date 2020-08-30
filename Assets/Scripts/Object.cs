@@ -24,6 +24,12 @@ public class Object : MonoBehaviour
         rig.AddForce(transform.forward * speed, ForceMode.Impulse);
     }
 
+    void Update(){
+        if(GameManager.sharedInstance.currentGameState == GameState.gameOver){
+            Destroy(gameObject);
+        }
+    }
+
     void OnCollisionEnter(Collision col){
         objectShooter.PlayCrak();
         Instantiate(decal, col.GetContact(0).point, Quaternion.FromToRotation(Vector3.forward, col.GetContact(0).normal));
