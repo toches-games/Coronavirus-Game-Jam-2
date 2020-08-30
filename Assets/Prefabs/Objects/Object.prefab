@@ -94,7 +94,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4284811
+  m_Radius: 0.5
   m_Center: {x: 0.005207181, y: -0.015622139, z: 0}
 --- !u!54 &708085598124575466
 Rigidbody:
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
-  damage: 2
+  damage: 4
   decal: {fileID: 1581041568187257736, guid: 4f1757caffde8d74d91bb1b678c09deb, type: 3}
   objectShooter: {fileID: 0}
 --- !u!1001 &1398656801281742206

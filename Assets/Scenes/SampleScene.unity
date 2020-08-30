@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -2610,7 +2610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b817bcf24f145948ae653682dc0e758, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedAttack: 1
+  speedAttack: 0.5
   initHealth: 100
   sliderHealth: {fileID: 1135080021}
   objects:
@@ -30007,7 +30007,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hammerDelayAttack: 5
-  hammerSpeed: 4
+  hammerSpeed: 6
   drillDelayAttack: 5
   drillSpeed: 3
   decals:

@@ -31,14 +31,17 @@ public class Object : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision col){
-        objectShooter.PlayCrak();
+        if(objectShooter){
+            objectShooter.PlayCrak();
+        }
+
         Instantiate(decal, col.GetContact(0).point, Quaternion.FromToRotation(Vector3.forward, col.GetContact(0).normal));
         
         if(col.transform.CompareTag("Player")){
             col.transform.GetComponent<PlayerController>().CollectHealth(-1);
         }
 
-        else{
+        else if(objectShooter){
             objectShooter.Damage(damage);
         }
 

@@ -34,9 +34,29 @@ public class ObjectShooter : MonoBehaviour
         yield return new WaitForSeconds(8f);
 
         while(true){
-            Object temp = Instantiate(objects[Random.Range(0, objects.Length)], transform.position, transform.rotation).GetComponent<Object>();
-            temp.objectShooter = this;
-            yield return new WaitForSeconds(speedAttack);
+            if(currentHealth <= initHealth){
+                Object temp = Instantiate(objects[Random.Range(0, objects.Length)], transform.position, transform.rotation).GetComponent<Object>();
+                temp.objectShooter = this;
+                
+                yield return new WaitForSeconds(speedAttack);
+            }
+
+            if(currentHealth <= 60){
+                Object temp = Instantiate(objects[Random.Range(0, objects.Length)], transform.position + transform.right * 5f, transform.rotation).GetComponent<Object>();
+                temp.objectShooter = this;
+                
+                yield return new WaitForSeconds(speedAttack);
+            }
+
+            if(currentHealth <= 40){
+                Object temp = Instantiate(objects[Random.Range(0, objects.Length)], transform.position + transform.right * -5f, transform.rotation).GetComponent<Object>();
+                temp.objectShooter = this;
+                
+                yield return new WaitForSeconds(speedAttack);
+            }
+
+            yield return new WaitForSeconds(1f);
+
         }
     }
 
