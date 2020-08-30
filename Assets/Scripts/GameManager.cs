@@ -151,6 +151,7 @@ public class GameManager : MonoBehaviour
         }
         else if (newGameState == GameState.gameOver)
         {
+            StopAllCoroutines();
             cameras[cameras.Count-1].gameObject.SetActive(true);
             Invoke("ShowGameOver", 2.5f);
             Invoke("HideHUD", 0.5f);
