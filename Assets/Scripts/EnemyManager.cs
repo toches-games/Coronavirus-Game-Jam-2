@@ -98,8 +98,8 @@ public class EnemyManager : MonoBehaviour
                 }
 
                 else{
-                    start = true;
                     yield return new WaitForSeconds(3f);
+                    start = true;
                 }
             }
 
@@ -144,12 +144,24 @@ public class EnemyManager : MonoBehaviour
                 }
 
                 else{
+                    yield return new WaitForSeconds(2f);
                     start = true;
-                    yield return new WaitForSeconds(5f);
                 }
             }
 
             else{
+                if(currentState == GameState.lvl4){
+                    if(Random.Range(1, 101) < 5){
+                        drillAttack = true;
+                        if(start){
+                            yield return new WaitForSeconds(0.5f);
+                        }
+                        drillSource.clip = drillClips[Random.Range(0, drillClips.Length)];
+                        drillSource.Play();
+                        yield return StartCoroutine(AnimateDrill(targetPosition));
+                    }
+                }
+
                 if(Random.Range(1, 101) < 2){
                     drillAttack = true;
                     if(start){

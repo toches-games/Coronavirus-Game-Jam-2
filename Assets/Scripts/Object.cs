@@ -6,15 +6,17 @@ public class Object : MonoBehaviour
 {
     public float speed;
 
+    public int damage;
+
     public GameObject decal;
 
     Rigidbody rig;
 
-    GameObject audio;
+    [HideInInspector]
+    public ObjectShooter objectShooter;
 
     void Awake(){
         rig = GetComponent<Rigidbody>();
-        audio = GameObject.Find("ObjectShooter");
     }
 
     // Start is called before the first frame update
@@ -23,11 +25,15 @@ public class Object : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision col){
-        audio.GetComponent<ObjectShooter>().PlayCrak();
+        objectShooter.PlayCrak();
         Instantiate(decal, col.GetContact(0).point, Quaternion.FromToRotation(Vector3.forward, col.GetContact(0).normal));
         
         if(col.transform.CompareTag("Player")){
             col.transform.GetComponent<PlayerController>().CollectHealth(-1);
+        }
+
+        else{
+            objectShooter.Damage(damage);
         }
 
         Destroy(gameObject);

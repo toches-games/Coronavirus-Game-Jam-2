@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class ObjectShooter : MonoBehaviour
 {
+    [Header("Roof Settings")]
     public float speedAttack;
+    public int initHealth;
+
 
     public GameObject[] objects;
 
@@ -14,6 +17,8 @@ public class ObjectShooter : MonoBehaviour
 
     AudioSource crack;
 
+    int currentHealth;
+
     void Awake(){
         crack = GetComponents<AudioSource>()[0];
     }
@@ -21,10 +26,13 @@ public class ObjectShooter : MonoBehaviour
     // Start is called before the first frame update
     IEnumerator Start()
     {
+        currentHealth = initHealth;
+
         yield return new WaitForSeconds(8f);
 
         while(true){
-            Instantiate(objects[Random.Range(0, objects.Length)], transform.position, transform.rotation);
+            Object temp = Instantiate(objects[Random.Range(0, objects.Length)], transform.position, transform.rotation).GetComponent<Object>();
+            temp.objectShooter = this;
             yield return new WaitForSeconds(speedAttack);
         }
     }
@@ -36,5 +44,10 @@ public class ObjectShooter : MonoBehaviour
 
     public void PlayCrak(){
         crack.Play();
+    }
+
+    public void Damage(int damage){
+        currentHealth -= damage;
+        print(currentHealth);
     }
 }
