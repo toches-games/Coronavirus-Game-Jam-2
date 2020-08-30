@@ -358,10 +358,7 @@ public class PlayerController : MonoBehaviour
         {
             playerRb.freezeRotation = true;
         }
-        if (other.CompareTag("KillZone"))
-        {
-            Die();
-        }
+        
     }
     private void OnTriggerExit(Collider other)
     {
@@ -371,7 +368,10 @@ public class PlayerController : MonoBehaviour
             other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
             //Destroy(GameObject.Find("Platforms" + ((int)GameManager.sharedInstance.currentGameState - 1)));
         }
-
+        if (other.CompareTag("KillZone"))
+        {
+            Die();
+        }
     }
 
 }

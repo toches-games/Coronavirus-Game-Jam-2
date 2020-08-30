@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
 
     public List<CinemachineVirtualCamera> cameras;
     public List<PlayableDirector> playableDirector;
+    public GameObject hud;
+    public GameObject gameOver_Display;
 
     //Guarda las coroutinas de las herramientas para detenerlas en cada cambio de nivel
     Coroutine hammerCoroutine;
@@ -104,6 +106,7 @@ public class GameManager : MonoBehaviour
             cameras[(int)newGameState - 1].Priority += (int)newGameState;
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ
                                                                 | RigidbodyConstraints.FreezeRotation;
+            Invoke("ShowHUD", 2.2f);
         }
         else if (newGameState == GameState.lvl2)
         {
@@ -145,7 +148,12 @@ public class GameManager : MonoBehaviour
         else if (newGameState == GameState.gameOver)
         {
             cameras[cameras.Count-1].gameObject.SetActive(true);
+            Invoke("ShowGameOver", 2.5f);
+            Invoke("HideHUD", 0.5f);
+
         }
+
+
         if ((int)newGameState > 1 && newGameState !=GameState.gameOver)
         {
             cameras[(int)newGameState - 1].gameObject.SetActive(true);
@@ -159,5 +167,18 @@ public class GameManager : MonoBehaviour
     public void ResetGame()
     {
         SceneManager.LoadScene(0);
+    }
+
+    public void ShowHUD()
+    {
+        hud.SetActive(true);
+    }
+    public void HideHUD()
+    {
+        hud.SetActive(false);
+    }
+    public void ShowGameOver()
+    {
+        gameOver_Display.SetActive(true);
     }
 }
