@@ -1,0 +1,386 @@
+fileFormatVersion: 2
+guid: 37785de44a8112c469f96fd49af7c98a
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5633734187584063221
+    second: susto_0
+  - first:
+      213: -8634912987148467652
+    second: susto_1
+  - first:
+      213: -3844471233290141615
+    second: susto_2
+  - first:
+      213: -2230750449560666830
+    second: susto_3
+  - first:
+      213: 3635231849446857455
+    second: susto_4
+  - first:
+      213: -6608370548905107114
+    second: susto_5
+  - first:
+      213: -7959091060874232399
+    second: susto_6
+  - first:
+      213: 744369245240983016
+    second: susto_7
+  - first:
+      213: -3128570486123592363
+    second: susto_8
+  - first:
+      213: -6259383552808052947
+    second: susto_9
+  - first:
+      213: 4477437544308005809
+    second: susto_10
+  - first:
+      213: 4192473084893326945
+    second: susto_11
+  - first:
+      213: -8430403220571646791
+    second: susto_12
+  - first:
+      213: -1626825652472351671
+    second: susto_13
+  - first:
+      213: 7851575024289602886
+    second: susto_14
+  - first:
+      213: 3439305878780565008
+    second: susto_15
+  - first:
+      213: -4956042205921263903
+    second: susto_16
+  - first:
+      213: -2530447946317250550
+    second: susto_0
+  - first:
+      213: 3190103933081868748
+    second: susto_1
+  - first:
+      213: 1389444811067335607
+    second: susto_2
+  - first:
+      213: 7024695329225221117
+    second: susto_3
+  - first:
+      213: -3449417552637071528
+    second: susto_4
+  - first:
+      213: 209613941305141765
+    second: susto_5
+  - first:
+      213: -2757095299399334254
+    second: susto_6
+  - first:
+      213: -6500658030672752302
+    second: susto_7
+  - first:
+      213: 570476063769005031
+    second: susto_8
+  - first:
+      213: -1599953549981137532
+    second: susto_9
+  - first:
+      213: -417320528648968831
+    second: susto_10
+  - first:
+      213: -827286885788216723
+    second: susto_11
+  - first:
+      213: 5877754621359575056
+    second: susto_12
+  - first:
+      213: 5978178943245902261
+    second: susto_13
+  - first:
+      213: 827531827384236754
+    second: susto_14
+  - first:
+      213: -7359654026621142258
+    second: susto_15
+  - first:
+      213: -1126774292697664185
+    second: susto_16
+  - first:
+      213: 5230520903558911633
+    second: susto_17
+  - first:
+      213: -8665049526169549089
+    second: susto_18
+  - first:
+      213: 8050624645211829256
+    second: susto_19
+  - first:
+      213: -2847166326878654365
+    second: susto_20
+  - first:
+      213: -911024694796550203
+    second: susto_21
+  - first:
+      213: 1859485737094007616
+    second: susto_22
+  - first:
+      213: 732320626332707604
+    second: susto_23
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: -1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: susto_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 104
+        height: 141
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a00c42deffa02ecd0800000000000000
+      internalID: -2530447946317250550
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: susto_1
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 0
+        width: 112
+        height: 141
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc9dbef00a6854c20800000000000000
+      internalID: 3190103933081868748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: susto_2
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 0
+        width: 130
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b3adaea1bc484310800000000000000
+      internalID: 1389444811067335607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: susto_4
+      rect:
+        serializedVersion: 2
+        x: 455
+        y: 0
+        width: 132
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85fe11df2053120d0800000000000000
+      internalID: -3449417552637071528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: susto_6
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 0
+        width: 132
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2964763de64dcb9d0800000000000000
+      internalID: -2757095299399334254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: susto_8
+      rect:
+        serializedVersion: 2
+        x: 749
+        y: 0
+        width: 132
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7eb80dd15fcbae700800000000000000
+      internalID: 570476063769005031
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: susto_10
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 0
+        width: 129
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1856664b031653af0800000000000000
+      internalID: -417320528648968831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 45d3d7f2470558644aa5a81b6f51c873
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
