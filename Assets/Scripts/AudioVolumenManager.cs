@@ -46,4 +46,13 @@ public class AudioVolumenManager : MonoBehaviour
             avc.SetAudioLevel(currentVolumeLevel);
         }
     }
+
+    public IEnumerator ProgressiveVolumeDown()
+    {
+        for (float i = 1; i > 0; i -= 0.01f)
+        {
+            currentVolumeLevel -= i;
+            yield return new WaitForSecondsRealtime(0.2f);
+        }
+    }
 }

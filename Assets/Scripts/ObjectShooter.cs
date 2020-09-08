@@ -74,7 +74,7 @@ public class ObjectShooter : MonoBehaviour
         sliderHealth.value = currentHealth;
 
         if(currentHealth <= 0){
-            GameManager.sharedInstance.Win();
+            GameManager.sharedInstance.NextLevel(6);
             Destroy(gameObject);
         }
     }

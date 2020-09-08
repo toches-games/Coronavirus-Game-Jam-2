@@ -1,5 +1,4 @@
-﻿ using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.Playables;
@@ -16,7 +15,7 @@ public enum GameState
     lvl3,
     lvl4,
     lvl5,
-    lvl6,
+    win,
     gameOver
 }
 
@@ -28,13 +27,13 @@ public class GameManager : MonoBehaviour
     public int collectedObject = 0;
     PlayerController controller;
     public float gameSpeed = 7f;
-    AudioSource backgroundAudioSource;
 
     public List<CinemachineVirtualCamera> cameras;
     public List<PlayableDirector> playableDirector;
     public GameObject hud;
     public GameObject gameOver_Display;
     AudioNewTrack newTrack;
+    AudioVolumenManager volumenManager;
 
     //Guarda las coroutinas de las herramientas para detenerlas en cada cambio de nivel
     Coroutine hammerCoroutine;
@@ -54,21 +53,13 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        /**
-        if(!backgroundAudioSource.isPlaying)
-        {
-            backgroundAudioSource.Play();
-        }
-        **/
         newTrack = FindObjectOfType<AudioNewTrack>();
+        volumenManager = FindObjectOfType<AudioVolumenManager>();
         NextLevel(1);
-
     }
 
     public void Win()
     {
-        newTrack.StopSound();
-        controller.StopAllSFX();
         SceneManager.LoadSceneAsync(2);
     }
 
@@ -80,26 +71,11 @@ public class GameManager : MonoBehaviour
     {
         Application.Quit();
     }
-    public void BackToMenu()
-    {
-        SetGameState(GameState.menu);
-    }
 
     public void NextLevel(int lvl)
     {
-        /*if(hammerCoroutine != null){
-            StopCoroutine(hammerCoroutine);
-            EnemyManager.sharedInstance.start = false;
-        }
-
-        if(drillCoroutine != null){
-            EnemyManager.sharedInstance.start = false;
-            StopCoroutine(drillCoroutine);
-        }*/
-
         StopAllCoroutines();
         EnemyManager.sharedInstance.start = false;
-
         SetGameState((GameState)lvl);
     }
 
@@ -107,27 +83,19 @@ public class GameManager : MonoBehaviour
     {
         //Actualiza el nivel en el EnemyManager
         EnemyManager.sharedInstance.currentState = newGameState;
-
-        if (newGameState == GameState.menu)
-        {
-
-        }
-        else if (newGameState == GameState.lvl1)
+        
+        if (newGameState == GameState.lvl1)
         {
             cameras[(int)newGameState - 1].gameObject.SetActive(true);
             cameras[(int)newGameState - 1].Priority += (int)newGameState;
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ
                                                                 | RigidbodyConstraints.FreezeRotation;
-            Invoke("ShowHUD", 2f);
+            Invoke("ShowHUD", 1.8f);
         }
         else if (newGameState == GameState.lvl2)
         {
             //Inicia y guarda la coroutina del martillo
             hammerCoroutine = StartCoroutine(EnemyManager.sharedInstance.HammerMovement());
-
-            //Destroy(cameras[0]);
-            //cameras[0] = null;
-            //cameras.RemoveAt(0);
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX
                                                                 | RigidbodyConstraints.FreezeRotation;
@@ -136,7 +104,6 @@ public class GameManager : MonoBehaviour
         {
             //Inicia y guarda la coroutina del taladro
             drillCoroutine = StartCoroutine(EnemyManager.sharedInstance.DrillMovement());
-
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionZ
                                                                 | RigidbodyConstraints.FreezeRotation;
@@ -146,7 +113,6 @@ public class GameManager : MonoBehaviour
             //Inicia y guarda la coroutina del martillo y taladro
             hammerCoroutine = StartCoroutine(EnemyManager.sharedInstance.HammerMovement());
             drillCoroutine = StartCoroutine(EnemyManager.sharedInstance.DrillMovement());
-
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX
                                                                 | RigidbodyConstraints.FreezeRotation;
@@ -158,6 +124,11 @@ public class GameManager : MonoBehaviour
             controller.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionX
                                                                 | RigidbodyConstraints.FreezeRotation;
             newTrack.ChangeTrack(4);
+        }else if(newGameState == GameState.win)
+        {
+            StartCoroutine(volumenManager.ProgressiveVolumeDown());
+            controller.StopAllSFX();
+            Invoke("Win", 2.5f);
         }
         else if (newGameState == GameState.gameOver)
         {
@@ -165,16 +136,19 @@ public class GameManager : MonoBehaviour
             cameras[cameras.Count-1].gameObject.SetActive(true);
             Invoke("ShowGameOver", 2.5f);
             Invoke("HideHUD", 0.5f);
-
         }
 
 
         if ((int)newGameState > 1 && newGameState !=GameState.gameOver)
         {
-            cameras[(int)newGameState - 1].gameObject.SetActive(true);
-            cameras[(int)newGameState - 1].Priority += (int)newGameState;
-            playableDirector[(int)newGameState - 2].Play();
-            cameras[(int)newGameState-2].gameObject.SetActive(false);
+            if((int)newGameState < 6)
+            {
+                cameras[(int)newGameState - 1].gameObject.SetActive(true);
+                cameras[(int)newGameState - 1].Priority += (int)newGameState;
+                cameras[(int)newGameState-2].gameObject.SetActive(false);
+            }
+                playableDirector[(int)newGameState - 2].Play();
+
         }
         this.currentGameState = newGameState;
     }
@@ -191,9 +165,5 @@ public class GameManager : MonoBehaviour
     public void HideHUD()
     {
         hud.SetActive(false);
-    }
-    public void ShowGameOver()
-    {
-        gameOver_Display.SetActive(true);
     }
 }

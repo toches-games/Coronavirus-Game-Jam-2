@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Playables;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
@@ -24,19 +22,9 @@ public class PlayerController : MonoBehaviour
     const string WALKING_STATE = "Walking";
     const string VERTICAL = "Vertical";
     const string IS_TOUCHING_GROUND = "isTouchingGround";
-
-
-
-
-
-
-    int healthPoints, manaPoints;
-
-    public const int INITIAL_HEALTH = 3, INITIAL_MANA = 15,
-        MIN_HEALTH = 1, MIN_MANA = 0, MAX_HEALTH = 3, MAX_MANA = 30;
-
-    public const int SUPERJUMP_COST = 10;
-    public const float SUPERJUMP_FORCE = 2f;
+    int healthPoints;
+    public const int INITIAL_HEALTH = 3,
+        MIN_HEALTH = 1, MAX_HEALTH = 3;
 
     public float jumpRaycastDistance = 0.6f;
     public float positionSidesRaycast = 0.3f;
@@ -70,15 +58,9 @@ public class PlayerController : MonoBehaviour
     {
         startPosition = this.transform.position;
         runningSpeed = GameManager.sharedInstance.gameSpeed;
-        //GameObject.Find("CM vcam3").GetComponent<CinemachineVirtualCamera>().Priority++;
-        //playerRb.MoveRotation(Quaternion.Euler(0, 90, 0));
-        //transform.rotation = Quaternion.Euler(0, 90, 0);
-        //transform.Rotate(0, 90, 0);
-        //playerRb.rotation = Quaternion.Euler(0, 90, 0);
         positionLeft = Vector3.zero;
         positionRight = Vector3.zero;
         healthPoints = INITIAL_HEALTH;
-
     }
 
     private void Update()
@@ -153,13 +135,8 @@ public class PlayerController : MonoBehaviour
 
         
         
-        //Debug.DrawRay(this.transform.position, Vector3.down * jumpRaycastDistance, Color.red);
         Debug.DrawRay(positionLeft, -transform.up * jumpRaycastDistance, Color.red);
         Debug.DrawRay(positionRight, -transform.up * jumpRaycastDistance, Color.red);
-        //Debug.Log(positionRight);
-        //Debug.Log(positionLeft);
-        //Debug.DrawRay(this.transform.position, Vector3.down * jumpRaycastDistance, Color.red);
-
 
         walking = false;
         
@@ -167,16 +144,12 @@ public class PlayerController : MonoBehaviour
         {
             walking = true;
             lastMovement = Input.GetAxis(HORIZONTAL) * runningSpeed;
-            
-
-
         }
 
         if (!walking)
         {
             playerRb.velocity = new Vector3(0, playerRb.velocity.y, 0);
             sfx.paso.Stop();
-
         }
 
         //Si está en el aire
@@ -209,7 +182,7 @@ public class PlayerController : MonoBehaviour
     {
         if (IsTouchingTheGround())
         {
-            //ForceMode2D me dos opcionesm force que seria como una 
+            //ForceMode2D me dos opciones, force que seria como una 
             //fuerza constante e impulse que seria como aplicar una
             //fuerza en instante nada mas.
             
@@ -217,29 +190,6 @@ public class PlayerController : MonoBehaviour
             //GetComponent<AudioSource>().Play();
             sfx.salto.Play();
         }
-    }
-
-    //Swipe up
-    void SwipeCheck()
-    {
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-            startTouchPosition = Input.GetTouch(0).position;
-
-        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended)
-        {
-            endTouchPosition = Input.GetTouch(0).position;
-            if (endTouchPosition.y - 200f > startTouchPosition.y)
-            {
-                //jumpSuper = true;
-            }
-            else
-            {
-                //jumpNormal = true;
-            }
-        
-        }
-        //Debug.Log(startTouchPosition.y);
-        //Debug.Log(endTouchPosition.y);
     }
 
     bool IsTouchingTheGround()
@@ -260,61 +210,14 @@ public class PlayerController : MonoBehaviour
         {
             return false;
         }
-
-        /**
-        if (Physics.Raycast(positionLeft,
-            Vector3.down, jumpRaycastDistance, groundMask))
-        {
-            return true;
-        }
-        else
-        if (Physics.Raycast(positionRight,
-            Vector3.down, jumpRaycastDistance, groundMask))
-        {
-            return true;
-        }
-
-        if (Physics.Raycast(this.transform.position, 
-            Vector3.down, jumpRaycastDistance, groundMask))
-        {
-            Debug.Log("Ground");
-
-            return true;
-        
-        }
-        **/
     }
 
     public void Die()
     {
-        //float travelledDistance = GetTraveledDistance();
-        //PlayerPrefs funciona como una variable que puede guardar y permite
-        //acceder a valores entre sesiones de juego (investigar mas)
-        //float previousMaxDistance = PlayerPrefs.GetFloat("maxScore", 0f);
-        //if (travelledDistance > previousMaxDistance)
-        //{
-        //    PlayerPrefs.SetFloat("maxScore", travelledDistance);
-        //}
         sfx.muerte.Play();
-        //animator.SetBool(IS_ALIVE, false);
         GameManager.sharedInstance.GameOver();
         sfx.paso.Stop();
         sfx.salto.Stop();
-    }
-
-    void RestartPosition()
-    {
-        if(this.transform.position.x >= 0f)
-        {
-            this.transform.position = startPosition;
-        }
-
-        this.playerRb.velocity = Vector2.zero;
-
-        Camera.main.GetComponent<CameraFollow>().ResetCameraPosition();
-
-        //GameObject mainCamera = GameObject.Find("Main Camera");
-        //mainCamera.GetComponent<CameraFollow>().ResetCameraPosition();
     }
 
     public void CollectHealth(int points)
@@ -337,28 +240,9 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    public void CollectMana(int points)
-    {
-        this.manaPoints += points;
-        if (this.manaPoints > MAX_MANA)
-        {
-            manaPoints = MAX_MANA;
-        }
-    }
-
     public int GetHealth()
     {
         return healthPoints;
-    }
-
-    public int GetMana()
-    {
-        return manaPoints;
-    }
-
-    public float GetTraveledDistance()
-    {
-        return this.transform.position.x - startPosition.x;
     }
 
     public void StopAllSFX()
@@ -372,9 +256,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("initAnimation"))
         {
-            //  Director.Play();
             GameManager.sharedInstance.NextLevel(((int)GameManager.sharedInstance.currentGameState) + 1);
-            Debug.Log(((int)GameManager.sharedInstance.currentGameState) + 1);
             playerRb.freezeRotation = false;
             other.GetComponent<BoxCollider>().enabled = false;
             sfx.alerta.Play();
@@ -389,9 +271,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("finishAnimation"))
         {
-            //playableDirector.Stop();
             other.gameObject.GetComponent<BoxCollider>().isTrigger = false;
-            //Destroy(GameObject.Find("Platforms" + ((int)GameManager.sharedInstance.currentGameState - 1)));
         }
         if (other.CompareTag("KillZone"))
         {
