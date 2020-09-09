@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour
     public GameObject gameOver_Display;
     AudioNewTrack newTrack;
     AudioVolumenManager volumenManager;
-
     //Guarda las coroutinas de las herramientas para detenerlas en cada cambio de nivel
     Coroutine hammerCoroutine;
     Coroutine drillCoroutine;
@@ -165,5 +164,10 @@ public class GameManager : MonoBehaviour
     public void HideHUD()
     {
         hud.SetActive(false);
+    }
+
+    public void ShowGameOver()
+    {
+        gameOver_Display.SetActive(true);
     }
 }
