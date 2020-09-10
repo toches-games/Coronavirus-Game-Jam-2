@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 9.254785573358342
+    m_Start: 8.238118906691678
     m_ClipIn: 0
     m_Asset: {fileID: -255300754706689143}
     m_Duration: 3.000000000000001
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 4.699999999999999
+    m_Start: 3.683333333333333
     m_ClipIn: 0
     m_Asset: {fileID: 1374114780505080606}
     m_Duration: 5.328979591836735
@@ -312,7 +312,7 @@ MonoBehaviour:
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: 4.228979591836734
+    m_BlendOutDuration: 4.228979591836735
     m_MixInCurve:
       serializedVersion: 2
       m_Curve:
@@ -372,7 +372,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: Sonido_-_Derrumbe
   - m_Version: 1
-    m_Start: 5.8
+    m_Start: 4.783333333333333
     m_ClipIn: 0
     m_Asset: {fileID: -5624018234800557090}
     m_Duration: 13.683333333333335
@@ -380,7 +380,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: -1918749607541258438}
     m_EaseInDuration: 0
     m_EaseOutDuration: 8
-    m_BlendInDuration: 4.228979591836734
+    m_BlendInDuration: 4.228979591836735
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -558,7 +558,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 3.183333333333335
+    m_Start: 2.1666666666666683
     m_ClipIn: 0
     m_Asset: {fileID: 3939324616823450495}
     m_Duration: 3.0714522400250037
@@ -697,7 +697,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 12.354785573358336
+    m_Start: 11.338118906691673
     m_ClipIn: 0
     m_Asset: {fileID: 4205584204133589295}
     m_Duration: 4.728547759975001
@@ -790,7 +790,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 6.25478557335834
+    m_Start: 5.238118906691675
     m_ClipIn: 0
     m_Asset: {fileID: 1401847259884979549}
     m_Duration: 3.000000000000001
@@ -883,7 +883,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 19.383333333333326
+    m_Start: 18.366666666666653
     m_ClipIn: 0
     m_Asset: {fileID: 9100531521486068624}
     m_Duration: 5.000000000000002
@@ -976,7 +976,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 5.28811890669167
+    m_Start: 4.271452240025004
     m_ClipIn: 0
     m_Asset: {fileID: -3126245948844400941}
     m_Duration: 2
@@ -1027,7 +1027,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: NextImage
   - m_Version: 1
-    m_Start: 8.304785573358343
+    m_Start: 7.288118906691677
     m_ClipIn: 0
     m_Asset: {fileID: -4265232538296411595}
     m_Duration: 2
@@ -1056,11 +1056,11 @@ MonoBehaviour:
     m_Recordable: 0
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
-    m_PostExtrapolationTime: 0.9166666666666607
+    m_PostExtrapolationTime: 0.9166666666666625
     m_PreExtrapolationTime: 0
     m_DisplayName: NextImage
   - m_Version: 1
-    m_Start: 11.221452240025004
+    m_Start: 10.20478557335834
     m_ClipIn: 0
     m_Asset: {fileID: 3490703298150734652}
     m_Duration: 2
@@ -1093,7 +1093,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: NextImage
   - m_Version: 1
-    m_Start: 16.249999999999982
+    m_Start: 15.233333333333318
     m_ClipIn: 0
     m_Asset: {fileID: 985050814389730278}
     m_Duration: 2
@@ -1126,7 +1126,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: NextImage
   - m_Version: 1
-    m_Start: 2.05
+    m_Start: 1.0333333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -6273916060713344796}
     m_Duration: 2
@@ -1173,8 +1173,8 @@ MonoBehaviour:
     m_Recordable: 0
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
-    m_PostExtrapolationTime: 1.2381189066916702
-    m_PreExtrapolationTime: 2.05
+    m_PostExtrapolationTime: 1.2381189066916711
+    m_PreExtrapolationTime: 1.0333333333333334
     m_DisplayName: NextImage
   m_Markers:
     m_Objects: []

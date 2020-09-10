@@ -18,7 +18,10 @@ public class Hole : MonoBehaviour
         
         //Si choca con el jugador
         if(other.name == "Player"){
-            other.GetComponent<PlayerController>().CollectHealth(-1);
+            if(other.GetComponent<PlayerController>().GetHealth() > 0)
+            {
+                other.GetComponent<PlayerController>().CollectHealth(-1);
+            }
         }
     }
 }
